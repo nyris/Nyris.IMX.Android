@@ -30,7 +30,7 @@ dependencies {
 ## Get Started
 #### Jump to Section
 * [Set app key and IAuthCallback](#set-app-key-and-iauthcallback)
-* [Integrate Everybag Camera](#integrate-everybag-camera)
+* [Integrate nyris Camera](#integrate-nyris-camera)
 * [Match Taken Pictures](#match-taken-pictures)
 * [Clear running or pending tasks](#clear-running-or-pending-tasks)
 
@@ -185,7 +185,7 @@ public class MainActivity extends Activity implements Callback {
         });
     }
 
-    //On taken picture from Everybag Camera
+    //On taken picture from nyris Camera
     @Override
     public void onTakenPicture(byte[] image) {
         byte[] image = getIntent().getExtras().getByteArray("image");
@@ -224,7 +224,8 @@ public class MainActivity extends Activity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Everybag.getInstance().clearAllTasks();
+        Nyris
+            .getInstance().clearAllTasks();
     }
 }
 ```
