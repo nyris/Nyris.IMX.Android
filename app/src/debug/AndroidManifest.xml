@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    styles.xml
+    EverybagDemo
+    Created by everybag GmbH on 23/06/2016.
+    Copyright © 2016 everybag GmbH. All rights reserved.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.nyris.demo"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        tools:replace="android:name"
+        android:name=".DebugDemoApp">
+    </application>
+</manifest>
