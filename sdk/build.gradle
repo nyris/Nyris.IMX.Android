@@ -92,7 +92,7 @@ android {
         }
 
         release {
-            minifyEnabled true
+            //minifyEnabled true
             buildConfigField "String", "CLIENT_ID", "\""+System.getenv("PUBLIC_SDK_CLIENT_ID")+"\""
             buildConfigField "String", "SECRET", "\""+System.getenv("PUBLIC_SDK_SECRET")+"\""
             buildConfigField "String", "LAST_COMMIT_HASH", getLastCommitHash()
