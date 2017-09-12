@@ -29,7 +29,8 @@ public abstract class NyrisEndpoints implements INyrisEndpoints{
     public static boolean DEBUG = false;
     private String scheme;
     String openIdServer;
-    String imageMatchingServer;
+    String apiServer;
+    String version;
 
     NyrisEndpoints()
     {
@@ -55,9 +56,9 @@ public abstract class NyrisEndpoints implements INyrisEndpoints{
     public String getImageMatchingApi() {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(scheme)
-                .authority(imageMatchingServer)
-                .appendPath("api")
-                .appendPath("find");
+                .authority(apiServer)
+                .appendPath("find")
+                .appendPath(version);
 
         return builder.build().toString();
     }
@@ -66,9 +67,9 @@ public abstract class NyrisEndpoints implements INyrisEndpoints{
     public String getImageMatchingApi(double lat, double lon, double acc) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(scheme)
-                .authority(imageMatchingServer)
-                .appendPath("api")
-                .appendPath("find");
+                .authority(apiServer)
+                .appendPath("find")
+                .appendPath(version);
         if(lat!= -1 && lon != -1 && acc !=1) {
             builder.appendQueryParameter("lat", String.valueOf(lat))
                     .appendQueryParameter("lon", String.valueOf(lon))

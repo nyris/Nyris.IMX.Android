@@ -33,5 +33,5 @@ class ParamKeys{
 
     static String live = "live_";
     static String openId = "open_id_server";
-    static String imageMatching = "image_matching_server";
+    static String api = "api_server";
 }

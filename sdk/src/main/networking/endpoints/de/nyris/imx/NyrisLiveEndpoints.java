@@ -30,6 +30,7 @@ class NyrisLiveEndpoints extends NyrisEndpoints{
     NyrisLiveEndpoints(){
         super();
         openIdServer = Helpers.getInstance().getParam(ParamKeys.live+ParamKeys.openId);
-        imageMatchingServer = Helpers.getInstance().getParam(ParamKeys.live+ParamKeys.imageMatching);
+        apiServer = Helpers.getInstance().getParam(ParamKeys.live+ParamKeys.api);
+        version = "v1";
     }
 }
