@@ -155,6 +155,8 @@ public class HttpRequestHelper extends Helper{
                     .url(url)
                     .addHeader("Authorization", token.getTokenType() + " " + token.getAccessToken())
                     .addHeader("Content-Length", image.length+"")
+                    //Add this if you want to get offers based on our Model
+                    .addHeader("Accept", "application/everybag.offers+json")
                     .post(RequestBody.create(MEDIA_TYPE_JPG, image));
             Request request = builder.build();
             try{
