@@ -68,8 +68,8 @@ public class Nyris implements INyris {
 
         Helpers.getInstance().saveParam(ParamKeys.live+ParamKeys.openId,
                 FirebaseRemoteConfig.getInstance().getString(ParamKeys.live+ParamKeys.openId));
-        Helpers.getInstance().saveParam(ParamKeys.live+ParamKeys.imageMatching,
-                FirebaseRemoteConfig.getInstance().getString(ParamKeys.live+ParamKeys.imageMatching));
+        Helpers.getInstance().saveParam(ParamKeys.live+ParamKeys.api,
+                FirebaseRemoteConfig.getInstance().getString(ParamKeys.live+ParamKeys.api));
 
         String endpoint = Helpers.getInstance().getParam(ParamKeys.live+ParamKeys.openId);
         if( endpoint == null
