@@ -16,6 +16,9 @@
 package de.nyris.imx;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * AccessToken.java - A class model that contain token access
  *
@@ -29,10 +32,11 @@ public class AccessToken{
     @SerializedName("access_token")
     String accessToken;
     @SerializedName("expires_in")
-    String expiresIn;
+    long expiresIn;
     @SerializedName("refresh_token")
     String refreshToken;
-
+    @SerializedName("creation_date")
+    Date creationDate;
     /**
      * Constructor
      */
@@ -46,7 +50,7 @@ public class AccessToken{
      * @param expiresIn tokenType A variable of type String
      * @param refreshToken tokenType A variable of type String
      */
-    public AccessToken(String tokenType, String accessToken, String expiresIn, String refreshToken) {
+    public AccessToken(String tokenType, String accessToken, long expiresIn, String refreshToken) {
         this.tokenType = tokenType;
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
@@ -70,10 +74,10 @@ public class AccessToken{
     }
 
     /**
-     * Get Expiration token time in milliseconds.
-     * @return token type string value
+     * Get Expiration token time in seconds.
+     * @return token type double value
      */
-    public String getExpiresIn() {
+    public double getExpiresIn() {
         return expiresIn;
     }
 
@@ -83,5 +87,23 @@ public class AccessToken{
      */
     public String getRefreshToken() {
         return refreshToken;
+    }
+
+    /**
+     * Set Token Creation Date
+     */
+    void setCreationDate() {
+        Calendar cal = Calendar.getInstance();
+        this.creationDate = cal.getTime();
+    }
+
+    /**
+     * Check if token is expired
+     * @return Boolean value, true == is expired, false not expired
+     */
+    public boolean isExpired(){
+        long expirationTimeStamp = creationDate.getTime()+expiresIn;
+        long currentTimeStamp = Calendar.getInstance().getTime().getTime();
+        return (currentTimeStamp - expirationTimeStamp) >= 0;
     }
 }
