@@ -9,7 +9,7 @@ Supports >=4.1 Android devices
 For more information please see [nyris.io](https://nyris.io]/)
 
 ## Releases
-Current release is 1.1.1 
+Current release is 1.1.2 
 
 ## Download
 Download via Gradle:
