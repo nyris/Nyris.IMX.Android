@@ -23,6 +23,7 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -174,9 +175,10 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
      */
     static AccessToken evaluateContentAuthResponse(String content, IAuthCallback authCallback){
         try{
-            Helpers.getInstance().saveParam(ParamKeys.accessToken, content);
             Gson gson = new Gson();
             AccessToken token = gson.fromJson(content, AccessToken.class);
+            token.setCreationDate();
+            Helpers.getInstance().saveParam(ParamKeys.accessToken, gson.toJson(token));
             if(token == null || token.getAccessToken() == null || token.getAccessToken().isEmpty()){
                 ResponseError responseError = new ResponseError();
                 responseError.setErrorCode(ResponseCode.ACCESS_TOKEN_ERROR);

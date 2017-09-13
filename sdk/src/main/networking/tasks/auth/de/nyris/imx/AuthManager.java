@@ -19,6 +19,8 @@ import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 
+import java.util.Date;
+
 /**
  * AuthManager.java - A class that handle authentication request
  *
@@ -35,7 +37,6 @@ class AuthManager implements IAuthManager {
     private Scope scope;
     private AuthTask authTask;
     private ICrashReporter reporter;
-
     /**
      * Constructor
      * @param authCallback A variable of type IAuthCallback
@@ -65,10 +66,6 @@ class AuthManager implements IAuthManager {
             try {
                 Gson gson = new Gson();
                 AccessToken accessToken = gson.fromJson(accessTokeStr, AccessToken.class);
-                //TODO : check token is expired
-                if(accessToken== null || accessToken.getAccessToken() == null || accessToken.getAccessToken().isEmpty()) {
-                    throw new RuntimeException("No access token, you need to call nyris init");
-                }
                 return accessToken;
             }
             catch (Exception e){
@@ -77,9 +74,7 @@ class AuthManager implements IAuthManager {
                 return null;
             }
         }
-        else{
-            throw new RuntimeException("No access token, you need to call nyris init");
-        }
+        return null;
     }
 
     @Override
@@ -100,6 +95,11 @@ class AuthManager implements IAuthManager {
         if(authTask== null){
             if(callback != null)
                 callback.onError(new ResponseError(ResponseCode.UNKNOWN_ERROR, "authTask is not implemented"));
+            return;
+        }
+        AccessToken accessToken = getToken();
+        if(accessToken!= null && !accessToken.isExpired()){
+            callback.onSuccess(accessToken);
             return;
         }
         authTask.execute();
