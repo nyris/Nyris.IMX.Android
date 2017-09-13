@@ -102,6 +102,8 @@ public class AccessToken{
      * @return Boolean value, true == is expired, false not expired
      */
     public boolean isExpired(){
+        if(creationDate == null)
+            return true;
         long expirationTimeStamp = creationDate.getTime()+expiresIn;
         long currentTimeStamp = Calendar.getInstance().getTime().getTime();
         return (currentTimeStamp - expirationTimeStamp) >= 0;
