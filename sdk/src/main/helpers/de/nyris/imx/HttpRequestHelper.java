@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class HttpRequestHelper extends Helper{
+class HttpRequestHelper extends Helper{
     static HttpRequestHelper instance;
     private static int timeout = 60;
     private String userAgent;
@@ -60,8 +60,7 @@ public class HttpRequestHelper extends Helper{
     }
 
     /**
-     * GET function that help to create and HTTP GET request, this function have retry feature when
-     * there are HTTP_UNAUTHORIZED Code, or when the token is expired.
+     * GET function that help to create and HTTP GET request
      * @param url A variable of type String
      * @param token A variable of type AccessToken
      * @param reporter A variable of type ICrashReporter
@@ -69,48 +68,38 @@ public class HttpRequestHelper extends Helper{
      * @see AccessToken
      * @return A Response of get request
      */
-    public Response get(String url, AccessToken token, @NonNull ICrashReporter reporter){
-        int nbRrefreshToken = 0;
-        Response response = null;
+    Response get(String url, AccessToken token, @NonNull ICrashReporter reporter){
         if(token == null)
             return null;
         OkHttpClient mHttpClient =  new OkHttpClient();
-        do{
-            if(NyrisEndpoints.DEBUG)
-                mHttpClient.networkInterceptors().add(new StethoInterceptor());
-            mHttpClient.setConnectTimeout(timeout, TimeUnit.SECONDS);
-            mHttpClient.setReadTimeout(timeout, TimeUnit.SECONDS);
-            Request request = new Request.Builder()
-                    .addHeader("Authorization", token.getTokenType() + " " + token.getAccessToken())
-                    .addHeader("User-Agent", userAgent)
-                    .url(url)
-                    .build();
-            try{
-                response = mHttpClient.newCall(request).execute();
-                if(response.code() == HttpsURLConnection.HTTP_UNAUTHORIZED){
-                    token = refreshToken(token, reporter);
-                }
-                else return response;
-            }
-            catch(Exception e){
-                reporter.reportException(e);
-                Log.e(HttpRequestHelper.class.getName(),e.getMessage());
-            }
-            nbRrefreshToken++;
-        } while(nbRrefreshToken < 3);
-        return response;
+        if(NyrisEndpoints.DEBUG)
+            mHttpClient.networkInterceptors().add(new StethoInterceptor());
+        mHttpClient.setConnectTimeout(timeout, TimeUnit.SECONDS);
+        mHttpClient.setReadTimeout(timeout, TimeUnit.SECONDS);
+        Request request = new Request.Builder()
+                .addHeader("Authorization", token.getTokenType() + " " + token.getAccessToken())
+                .addHeader("User-Agent", userAgent)
+                .url(url)
+                .build();
+        try{
+            return mHttpClient.newCall(request).execute();
+        }
+        catch(Exception e){
+            reporter.reportException(e);
+            Log.e(HttpRequestHelper.class.getName(),e.getMessage());
+        }
+        return null;
     }
 
     /**
-     * GET function that help to create and HTTP GET request, this function have retry feature when
-     * there are HTTP_UNAUTHORIZED Code, or when the token is expired.
+     * GET function that help to create and HTTP GET request
      * @param url A variable of type String
      * @param formBody A Variable of type Request Body
      * @param reporter A variable of type ICrashReporter
      * @see ICrashReporter
      * @return A Response of get request
      */
-    public Response post(String url, RequestBody formBody, @NonNull ICrashReporter reporter){
+    Response post(String url, RequestBody formBody, @NonNull ICrashReporter reporter){
         OkHttpClient mHttpClient =  new OkHttpClient();
         if(NyrisEndpoints.DEBUG)
             mHttpClient.networkInterceptors().add(new StethoInterceptor());
@@ -131,82 +120,26 @@ public class HttpRequestHelper extends Helper{
     }
 
     /**
-     * POST function that help to create and HTTP POST request, this function have retry feature when
-     * there are HTTP_UNAUTHORIZED Code, or when the token is expired.
-     * @param url A variable of type String
-     * @param token A variable of type AccessToken
-     * @param image A variable of type Array of bytes "body request"
+     * POST function that help to create and HTTP POST request
+     * @param request A variable of type Request
      * @param reporter A variable of type ICrashReporter
      * @see ICrashReporter
      * @see AccessToken
      * @return A Response of post request
      */
-    public Response post(String url, AccessToken token, byte[] image, @NonNull ICrashReporter reporter){
-        int nbRrefreshToken = 0;
-        Response response = null;
-        final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
+    Response post(Request request, ICrashReporter reporter) {
         OkHttpClient mHttpClient =  new OkHttpClient();
-        do{
-            if(NyrisEndpoints.DEBUG)
-                mHttpClient.networkInterceptors().add(new StethoInterceptor());
-            mHttpClient.setConnectTimeout(timeout, TimeUnit.SECONDS);
-            mHttpClient.setReadTimeout(timeout, TimeUnit.SECONDS);
-            Request.Builder builder = new Request.Builder()
-                    .url(url)
-                    .addHeader("Authorization", token.getTokenType() + " " + token.getAccessToken())
-                    .addHeader("Content-Length", image.length+"")
-                    //Add this if you want to get offers based on our Model
-                    .addHeader("Accept", "application/everybag.offers+json")
-                    .post(RequestBody.create(MEDIA_TYPE_JPG, image));
-            Request request = builder.build();
-            try{
-                response = mHttpClient.newCall(request).execute();
-                if(response.code() == HttpsURLConnection.HTTP_UNAUTHORIZED){
-                    token = refreshToken(token, reporter);
-                }
-                else return response;
-            }
-            catch(Exception e){
-                reporter.reportException(e);
-                Log.e(HttpRequestHelper.class.getName(),e.getMessage());
-            }
-            nbRrefreshToken++;
-            nbRrefreshToken++;
-        }
-        while(nbRrefreshToken < 3);
-        return response;
-    }
-
-    /**
-     * When token is expired or you get HTTP_UNAUTHORIZED code you call this to refresh token
-     * @param token A variable of type AccessToken
-     * @param reporter A variable of type ICrashReporter
-     * @see ICrashReporter
-     * @see AccessToken
-     * @return An the new AccessToken
-     */
-    private AccessToken refreshToken(AccessToken token, ICrashReporter reporter){
-        RequestBody formBody = new FormEncodingBuilder()
-                .add(ParamKeys.grantType, ParamKeys.refreshToken)
-                .add(ParamKeys.refreshToken, token.getRefreshToken())
-                .add(ParamKeys.clientId, Nyris.getInstance().getClientId())
-                .build();
-
-        OkHttpClient mHttpClient =  new OkHttpClient();
-        mHttpClient.setConnectTimeout(timeout, TimeUnit.SECONDS); // connect timeout
+        if(NyrisEndpoints.DEBUG)
+            mHttpClient.networkInterceptors().add(new StethoInterceptor());
+        mHttpClient.setConnectTimeout(timeout, TimeUnit.SECONDS);
         mHttpClient.setReadTimeout(timeout, TimeUnit.SECONDS);
-        Request request = new Request.Builder()
-                .url(Nyris.getInstance().getEverybagEndpoits().getOpenIdApi())
-                .post(formBody)
-                .build();
-        try {
-            Response response = mHttpClient.newCall(request).execute();
-            return BaseTask.evaluateContentAuthResponse(response.body().string(), null);
+
+        try{
+            return mHttpClient.newCall(request).execute();
         }
-        catch (Exception e){
-            e.printStackTrace();
-            if(reporter!= null)
-                reporter.reportException(e);
+        catch(Exception e){
+            reporter.reportException(e);
+            Log.e(HttpRequestHelper.class.getName(),e.getMessage());
         }
         return null;
     }
