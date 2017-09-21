@@ -207,6 +207,15 @@ public class Nyris implements INyris {
     }
 
     @Override
+    public void match(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback) {
+        if(authManager == null || authManager.getToken() == null)
+            throw new RuntimeException("You need to login first before using match image");
+        ImageMatchingTask task = new ImageMatchingTask(image,matchCallback, authManager.getToken(), endpoints, reporter);
+        task.execute();
+        tasks.add(task);
+    }
+
+    @Override
     public void clearAllTasks() {
         if(authManager == null)
             return;

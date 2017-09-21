@@ -16,6 +16,9 @@
 package de.nyris.imx;
 
 import com.google.gson.Gson;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.json.JSONException;
@@ -37,6 +40,7 @@ class ImageMatchingTask extends BaseTask{
     private double lon;
     private double acc;
     private byte[] image;
+    private boolean isOnlySimilarOffers;
     private IMatchCallback matchCallback;
 
     /**
@@ -82,9 +86,38 @@ class ImageMatchingTask extends BaseTask{
         this.matchCallback = matchCallback;
     }
 
+    /**
+     * Constructor
+     * @param image A variable of type array of bytes
+     * @param matchCallback A variable of type IMatchCallback
+     * @param accessToken A Variable of type AccessToken
+     * @param endpoints A variable of type INyrisEndpoints
+     * @param reporter A variable of type ICrashReporter
+     * @see IMatchCallback
+     * @see AccessToken
+     * @see INyrisEndpoints
+     * @see ICrashReporter
+     */
+    ImageMatchingTask(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback, AccessToken accessToken, INyrisEndpoints endpoints, ICrashReporter reporter){
+        this(image, matchCallback,accessToken, endpoints, reporter);
+        this.isOnlySimilarOffers = isOnlySimilarOffers;
+    }
+
     @Override
     protected Object doInBackground(Void... params) {
-        Response response = HttpRequestHelper.getInstance().post(endpoints.getImageMatchingApi(), accessToken, image,reporter);
+        //Build Request
+        Request.Builder builder = new Request.Builder()
+                .url(endpoints.getImageMatchingApi())
+                .addHeader("Authorization", accessToken.getTokenType() + " " + accessToken.getAccessToken())
+                .addHeader("Content-Length", image.length+"")
+                //Add this if you want to get offers based on our Model
+                .addHeader("Accept", "application/everybag.offers+json");
+        if(isOnlySimilarOffers)
+            builder.addHeader("X-Only-Semantic-Search","mario");
+
+        builder.post(RequestBody.create(MediaType.parse("image/jpg"), image));
+
+        Response response = HttpRequestHelper.getInstance().post(builder.build(),reporter);
         Object content = null;
         try {
             content = getResponseContent(response);
