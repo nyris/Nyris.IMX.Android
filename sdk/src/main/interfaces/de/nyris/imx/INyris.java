@@ -68,6 +68,15 @@ public interface INyris {
     void match(byte[] image, IMatchCallback matchCallback);
 
     /**
+     * Match an image
+     * @param image A variable of type of array of bytes
+     * @param isOnlySimilarOffers A variable of type Boolean
+     * @param matchCallback A variable of type IMatchCallback
+     * @see IMatchCallback
+     */
+    void match(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback);
+
+    /**
      * Clear pending or running Tasks
      */
     void clearAllTasks();
