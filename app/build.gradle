@@ -53,6 +53,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
-    compile "de.nyris:camera:0.46.1"
+    compile "de.nyris:camera:0.51.2"
     compile project(":sdk")
 }
