@@ -9,7 +9,7 @@ Supports >=4.1 Android devices
 For more information please see [nyris.io](https://nyris.io]/)
 
 ## Releases
-Current release is 1.1.2 
+Current release is 1.2.0
 
 ## Download
 Download via Gradle:
@@ -211,6 +211,9 @@ public class MainActivity extends Activity implements Callback {
                         //On Error
                     }
                 });
+        // Or searching only similar offers
+        Nyris.getInstance()
+                        .match(data, true, new IMatchCallback(){...});
     }
     ...
 }
