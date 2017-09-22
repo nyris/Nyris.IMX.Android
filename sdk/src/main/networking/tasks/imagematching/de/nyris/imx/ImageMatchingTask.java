@@ -111,7 +111,7 @@ class ImageMatchingTask extends BaseTask{
                 .addHeader("Authorization", accessToken.getTokenType() + " " + accessToken.getAccessToken())
                 .addHeader("Content-Length", image.length+"")
                 //Add this if you want to get offers based on our Model
-                .addHeader("Accept", "application/everybag.offers+json");
+                .addHeader("Accept", "application/offers.everybag+json");
         if(isOnlySimilarOffers)
             builder.addHeader("X-Only-Semantic-Search","mario");
 
