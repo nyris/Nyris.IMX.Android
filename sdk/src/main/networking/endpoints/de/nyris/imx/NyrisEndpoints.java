@@ -28,7 +28,6 @@ import android.net.Uri;
 public abstract class NyrisEndpoints implements INyrisEndpoints{
     public static boolean DEBUG = false;
     private String scheme;
-    String openIdServer;
     String apiServer;
     String version;
 
@@ -45,7 +44,7 @@ public abstract class NyrisEndpoints implements INyrisEndpoints{
     public String getOpenIdApi() {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(scheme)
-                .authority(openIdServer)
+                .authority(apiServer)
                 .appendPath("connect")
                 .appendPath("token");
 
