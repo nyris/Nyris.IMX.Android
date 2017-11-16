@@ -92,7 +92,7 @@ class HttpRequestHelper extends Helper{
     }
 
     /**
-     * GET function that help to create and HTTP GET request
+     * POST function that help to create and HTTP GET request
      * @param url A variable of type String
      * @param formBody A Variable of type Request Body
      * @param reporter A variable of type ICrashReporter
