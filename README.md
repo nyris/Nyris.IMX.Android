@@ -29,10 +29,25 @@ dependencies {
 
 ## Get Started
 #### Jump to Section
+* [Init SDK First](#init-the-sdk-first)
 * [Set app key and IAuthCallback](#set-app-key-and-iauthcallback)
 * [Integrate nyris Camera](#integrate-nyris-camera)
 * [Match Taken Pictures](#match-taken-pictures)
 * [Clear running or pending tasks](#clear-running-or-pending-tasks)
+
+### Init SDK First:
+Init yoru SDK before to start anything else 
+```java
+public class YouApp_Or_Your_First_Activity{    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        //Init the SDK
+        Nyris.getInstance().init(this);
+    }
+}
+```
 
 ### Set app key and IAuthCallback:
 Start nyris imx SDK by getting access to our APIs
