@@ -9,7 +9,7 @@ Supports >=4.1 Android devices
 For more information please see [nyris.io](https://nyris.io]/)
 
 ## Releases
-Current release is 1.2.2
+Current release is 1.3.0
 
 ## Download
 Download via Gradle:
@@ -29,23 +29,39 @@ dependencies {
 
 ## Get Started
 #### Jump to Section
+* [Init SDK First](#init-the-sdk-first)
 * [Set app key and IAuthCallback](#set-app-key-and-iauthcallback)
 * [Integrate nyris Camera](#integrate-nyris-camera)
 * [Match Taken Pictures](#match-taken-pictures)
 * [Clear running or pending tasks](#clear-running-or-pending-tasks)
 
+### Init SDK First:
+Init yoru SDK before to start anything else 
+```java
+public class YouApp_Or_Your_First_Activity{    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        //Init the SDK
+        Nyris.getInstance().init(this);
+    }
+}
+```
+
 ### Set app key and IAuthCallback:
 Start nyris imx SDK by getting access to our APIs
 ```java
-public class SplashScreenActivity extends AppCompatActivity implements IAuthCallback {
+public class SplashScreenActivity extends AppCompatActivity implements /*Deprecated*/ IAuthCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ...
         //Set
         Nyris
             .getInstance()
-            //Enabling crash report will keep us updated in case you face issues with our SDK
-            .enableCrashReport(true)
+            //Deprecated
+            .enableCrashReport(true)            
+            //Deprecated
             .login(YOUR_CLIENT_ID, 
                 YOUR_SECRET, 
                 SplashScreenActivity.this);
@@ -228,7 +244,8 @@ public class MainActivity extends Activity{
     protected void onDestroy() {
         super.onDestroy();
         Nyris
-            .getInstance().clearAllTasks();
+            .getInstance()
+            .clearAllTasks();
     }
 }
 ```
