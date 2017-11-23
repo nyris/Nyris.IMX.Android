@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.3.0 - 2017-11-23
+### Added
+- Some deprecated methods
+- Hard coded nyris api url
+
+### Removed
+- Firebase Crash
+- Firebase Remote config
+
+### Changed 
+- Helpers class no more static instance
+- HttpRequestHelper class no more static instance
+
 ## 1.2.2 - 2017-11-16
 ### Changed 
 - Migrated the old endpoints o the newest one
