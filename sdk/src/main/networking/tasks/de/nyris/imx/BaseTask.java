@@ -15,6 +15,7 @@
  */
 package de.nyris.imx;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -29,42 +30,39 @@ import javax.net.ssl.HttpsURLConnection;
 
 class BaseTask extends AsyncTask<Void, Void, Object> {
     final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    Context context;
     private ICallback callback;
-    protected AccessToken accessToken;
-    protected ICrashReporter reporter;
-    protected INyrisEndpoints endpoints;
+    AccessToken accessToken;
+    INyrisEndpoints endpoints;
     ResponseError responseError;
 
     /**
      * Constructor
+     * @param context A Variable of type Context
      * @param callback A Variable of type ICallback
      * @param accessToken A Variable of type AccessToken
      * @param endpoints A variable of type INyrisEndpoints
-     * @param reporter A variable of type ICrashReporter
      * @see ICallback
      * @see AccessToken
      * @see INyrisEndpoints
-     * @see ICrashReporter
      */
-    public BaseTask(ICallback callback, AccessToken accessToken, INyrisEndpoints endpoints, ICrashReporter reporter){
+    public BaseTask(Context context, ICallback callback, AccessToken accessToken, INyrisEndpoints endpoints){
+        this.context = context;
         this.callback = callback;
         this.accessToken = accessToken;
         this.endpoints = endpoints;
-        this.reporter = reporter;
         this.responseError = new ResponseError();
     }
 
     /**
      * Constructor
      * @param endpoints A variable of type INyrisEndpoints
-     * @param reporter A vairbale of type ICrashReporter
      * @see INyrisEndpoints
-     * @see ICrashReporter
      */
-    public BaseTask(ICallback callback, INyrisEndpoints endpoints, ICrashReporter reporter){
+    public BaseTask(Context context, ICallback callback, INyrisEndpoints endpoints){
+        this.context = context;
         this.callback = callback;
         this.endpoints = endpoints;
-        this.reporter = reporter;
         this.responseError = new ResponseError();
     }
 
@@ -75,9 +73,9 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if(!Helpers.getInstance().isOnline() && callback != null){
+        if(!Helpers.isOnline(context) && callback != null){
             responseError.setErrorCode(ResponseCode.NO_INTERNET);
-            responseError.setErrorDescription(Helpers.getInstance().getText(R.string.error_no_network_msg));
+            responseError.setErrorDescription(context.getString( R.string.error_no_network_msg));
             callback.onError(responseError);
         }
     }
@@ -143,11 +141,8 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
      */
     private String convertErrorResponseCode(Response response){
         String errorCode;
-        String message = response.message();
         if(response.code() == -1)
             return ResponseCode.HTTP_UNKNOWN_ERROR;
-        if(response.code()>=500 && response.code() <= 600)
-            reporter.reportException(new ServerException(message));
         switch (response.code()){
             case HttpsURLConnection.HTTP_INTERNAL_ERROR :
                 errorCode = ResponseCode.HTTP_INTERNAL_ERROR;
@@ -173,16 +168,16 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
      * @see IAuthCallback
      * @see AccessToken
      */
-    static AccessToken evaluateContentAuthResponse(String content, IAuthCallback authCallback){
+    static AccessToken evaluateContentAuthResponse(Context context, String content, IAuthCallback authCallback){
         try{
             Gson gson = new Gson();
             AccessToken token = gson.fromJson(content, AccessToken.class);
             token.setCreationDate();
-            Helpers.getInstance().saveParam(ParamKeys.accessToken, gson.toJson(token));
-            if(token == null || token.getAccessToken() == null || token.getAccessToken().isEmpty()){
+            Helpers.saveParam(context, ParamKeys.accessToken, gson.toJson(token));
+            if(token.getAccessToken() == null || token.getAccessToken().isEmpty()){
                 ResponseError responseError = new ResponseError();
                 responseError.setErrorCode(ResponseCode.ACCESS_TOKEN_ERROR);
-                responseError.setErrorDescription(Helpers.getInstance().getText(R.string.error_token_getting));
+                responseError.setErrorDescription(context.getString( R.string.error_token_getting));
                 authCallback.onError(responseError);
                 return null;
             }

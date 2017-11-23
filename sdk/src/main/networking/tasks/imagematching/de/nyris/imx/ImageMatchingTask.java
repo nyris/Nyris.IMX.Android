@@ -15,6 +15,8 @@
  */
 package de.nyris.imx;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
@@ -51,16 +53,14 @@ class ImageMatchingTask extends BaseTask{
      * @param acc A variable of type double
      * @param matchCallback A variable of type IMatchCallback
      * @param accessToken A Variable of type AccessToken
-     * @param endpoints A variable of type INyrisEndpoints
-     * @param reporter A variable of type ICrashReporter
+     * @param endpoints A variable of type INyrisEndpoints=
      * @see IMatchCallback
      * @see AccessToken
      * @see INyrisEndpoints
-     * @see ICrashReporter
      */
-    ImageMatchingTask(byte[] image, double lat, double lon, double acc, IMatchCallback matchCallback, AccessToken accessToken,
-                      INyrisEndpoints endpoints, ICrashReporter reporter){
-        super(matchCallback,accessToken,endpoints,reporter);
+    ImageMatchingTask(Context context, byte[] image, double lat, double lon, double acc, IMatchCallback matchCallback, AccessToken accessToken,
+                      INyrisEndpoints endpoints){
+        super(context, matchCallback,accessToken,endpoints);
         this.image = image;
         this.lat = lat;
         this.lon = lon;
@@ -74,14 +74,12 @@ class ImageMatchingTask extends BaseTask{
      * @param matchCallback A variable of type IMatchCallback
      * @param accessToken A Variable of type AccessToken
      * @param endpoints A variable of type INyrisEndpoints
-     * @param reporter A variable of type ICrashReporter
      * @see IMatchCallback
      * @see AccessToken
      * @see INyrisEndpoints
-     * @see ICrashReporter
      */
-    ImageMatchingTask(byte[] image, IMatchCallback matchCallback, AccessToken accessToken, INyrisEndpoints endpoints, ICrashReporter reporter){
-        super(matchCallback, accessToken,endpoints,reporter);
+    ImageMatchingTask(Context context, byte[] image, IMatchCallback matchCallback, AccessToken accessToken, INyrisEndpoints endpoints){
+        super(context, matchCallback, accessToken,endpoints);
         this.image = image;
         this.matchCallback = matchCallback;
     }
@@ -92,14 +90,13 @@ class ImageMatchingTask extends BaseTask{
      * @param matchCallback A variable of type IMatchCallback
      * @param accessToken A Variable of type AccessToken
      * @param endpoints A variable of type INyrisEndpoints
-     * @param reporter A variable of type ICrashReporter
      * @see IMatchCallback
      * @see AccessToken
      * @see INyrisEndpoints
-     * @see ICrashReporter
      */
-    ImageMatchingTask(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback, AccessToken accessToken, INyrisEndpoints endpoints, ICrashReporter reporter){
-        this(image, matchCallback,accessToken, endpoints, reporter);
+    ImageMatchingTask(Context context, byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback,
+                      AccessToken accessToken, INyrisEndpoints endpoints){
+        this(context, image, matchCallback,accessToken, endpoints);
         this.isOnlySimilarOffers = isOnlySimilarOffers;
     }
 
@@ -117,14 +114,12 @@ class ImageMatchingTask extends BaseTask{
 
         builder.post(RequestBody.create(MediaType.parse("image/jpg"), image));
 
-        Response response = HttpRequestHelper.getInstance().post(builder.build(),reporter);
+        Response response = HttpRequestHelper.post(builder.build());
         Object content = null;
         try {
             content = getResponseContent(response);
         } catch (Exception e) {
             e.printStackTrace();
-            if(reporter!= null)
-                reporter.reportException(e);
         }
         return content;
     }
@@ -162,7 +157,7 @@ class ImageMatchingTask extends BaseTask{
                 }
                 else {
                     responseError.setErrorCode(ResponseCode.IMAGE_NOT_FOUND_ERROR);
-                    responseError.setErrorDescription(Helpers.getInstance().getText(R.string.error_offer_not_found));
+                    responseError.setErrorDescription(context.getString(R.string.error_offer_not_found));
                     matchCallback.onError(responseError);
                 }
             }
