@@ -28,7 +28,9 @@ public interface INyris {
      * Enable Crash report that help nyris team to fix your issues quickly before your notice :P
      * @param isEnabled A variable of type boolean
      * @return Current Instance of the SDK
+     * @deprecated this method will be remove in the version 1.4.0
      */
+    @Deprecated
     INyris enableCrashReport(boolean isEnabled);
 
     /**
@@ -42,7 +44,7 @@ public interface INyris {
      * @see INyrisEndpoints
      * @return Instance of INyrisEndpoints
      */
-    INyrisEndpoints getEverybagEndpoits();
+    INyrisEndpoints getNyrisEndpoits();
 
     /**
      * Get Current Client Id
@@ -56,7 +58,9 @@ public interface INyris {
      * @param clientSecret A variable of type String
      * @param authCallback A variable of type IAuthCallback
      * @see IAuthCallback
+     * @deprecated this method will be remove in the version 1.4.0, you will be asked to set your clientId only
      */
+    @Deprecated
     void login(String clientId, String clientSecret, IAuthCallback authCallback);
 
     /**

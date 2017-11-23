@@ -19,10 +19,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +33,8 @@ import java.util.List;
 public class Nyris implements INyris {
     private static Nyris instance;
     private boolean isCrashReport;
-    private int cacheValidity = 3600; //1 hour
     private List<AsyncTask> tasks;
+    private Context mContext;
 
     //Managers
     private IAuthManager authManager;
@@ -46,57 +42,12 @@ public class Nyris implements INyris {
     //Endpoints
     private INyrisEndpoints endpoints;
 
-    //Analytics
-    private ICrashReporter reporter;
-
-    private OnCompleteListener<Void> onCompleteListener = new OnCompleteListener<Void>() {
-        @Override
-        public void onComplete(@NonNull Task<Void> task) {
-            if (task.isSuccessful()) {
-                refreshEndoints();
-            } else {
-                FirebaseRemoteConfig.getInstance().fetch(cacheValidity);
-            }
-        }
-    };
-
-    /**
-     * Refresh endpoints and client id value from firebase remote config
-     */
-    private void refreshEndoints(){
-        FirebaseRemoteConfig.getInstance().activateFetched();
-
-        Helpers.getInstance().saveParam(ParamKeys.live+ParamKeys.openId,
-                FirebaseRemoteConfig.getInstance().getString(ParamKeys.live+ParamKeys.openId));
-        Helpers.getInstance().saveParam(ParamKeys.live+ParamKeys.api,
-                FirebaseRemoteConfig.getInstance().getString(ParamKeys.live+ParamKeys.api));
-
-        String endpoint = Helpers.getInstance().getParam(ParamKeys.live+ParamKeys.openId);
-        if( endpoint == null
-                || endpoint.isEmpty())
-            return;
-
-        endpoints = NyrisEndpoints.getInstance();
-    }
-
     @Override
     public void init(Context context){
         if(context == null)
             throw new RuntimeException("Context is null");
-
+        mContext = context;
         tasks = new ArrayList<>();
-
-        if(reporter == null)
-            reporter = new FirebaseCrashReporter(context.getApplicationContext());
-
-        Helpers.getInstance().init(context, reporter);
-
-        FirebaseRemoteConfig.getInstance().fetch(cacheValidity).addOnCompleteListener(onCompleteListener);
-
-        String endpoint = Helpers.getInstance().getParam(ParamKeys.live+ParamKeys.openId);
-        if( endpoint == null
-                || endpoint.isEmpty())
-            return;
         endpoints = NyrisEndpoints.getInstance();
     }
     /**
@@ -131,7 +82,7 @@ public class Nyris implements INyris {
     }
 
     @Override
-    public INyrisEndpoints getEverybagEndpoits() {
+    public INyrisEndpoints getNyrisEndpoits() {
         return endpoints;
     }
 
@@ -142,16 +93,7 @@ public class Nyris implements INyris {
     @Override
     public void login(final @NonNull String clientId, final @NonNull String clientSecret,
                       final @NonNull IAuthCallback authCallback){
-        if(!isEndpointsSet()) {
-            loadRemoteConfig(new IRemoteConfigCallback() {
-                @Override
-                public void onSuccess() {
-                    loginWithClientIdAndSecret(clientId, clientSecret, Scope.image_matching, authCallback);
-                }
-            });
-        }else{
-            loginWithClientIdAndSecret(clientId, clientSecret, Scope.image_matching, authCallback);
-        }
+        loginWithClientIdAndSecret(clientId, clientSecret, Scope.image_matching, authCallback);
     }
 
     /**
@@ -165,43 +107,15 @@ public class Nyris implements INyris {
      */
     private void loginWithClientIdAndSecret(String clientId, String clientSecret, Scope scope, IAuthCallback authCallback){
         endpoints = new NyrisLiveEndpoints();
-        authManager = new AuthManager(authCallback,clientId,clientSecret, scope, endpoints, reporter);
+        authManager = new AuthManager(mContext,authCallback,clientId,clientSecret, scope, endpoints);
         authManager.execute();
-    }
-
-    /**
-     * Check if Endpoints is set
-     * @return Boolean value, true for set false for unset
-     * @see ICallback
-     */
-    private boolean isEndpointsSet(){
-        return endpoints != null;
-    }
-
-    /**
-     * Get Remote config from firebase
-     * @param callback A variable of type IRemoteConfigCallback
-     * @see IRemoteConfigCallback
-     */
-    private void loadRemoteConfig(final IRemoteConfigCallback callback){
-        FirebaseRemoteConfig.getInstance().fetch(cacheValidity).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    refreshEndoints();
-                    callback.onSuccess();
-                }else {
-                    FirebaseRemoteConfig.getInstance().fetch(cacheValidity).addOnCompleteListener(this);
-                }
-            }
-        });
     }
 
     @Override
     public void match(final @NonNull byte[] image, final @NonNull IMatchCallback matchCallback) {
         if(authManager == null || authManager.getToken() == null)
             throw new RuntimeException("You need to login first before using match image");
-        ImageMatchingTask task = new ImageMatchingTask(image,matchCallback, authManager.getToken(), endpoints, reporter);
+        ImageMatchingTask task = new ImageMatchingTask(mContext,image,matchCallback, authManager.getToken(), endpoints);
         task.execute();
         tasks.add(task);
     }
@@ -210,7 +124,7 @@ public class Nyris implements INyris {
     public void match(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback) {
         if(authManager == null || authManager.getToken() == null)
             throw new RuntimeException("You need to login first before using match image");
-        ImageMatchingTask task = new ImageMatchingTask(image,matchCallback, authManager.getToken(), endpoints, reporter);
+        ImageMatchingTask task = new ImageMatchingTask(mContext, image,isOnlySimilarOffers, matchCallback, authManager.getToken(), endpoints);
         task.execute();
         tasks.add(task);
     }

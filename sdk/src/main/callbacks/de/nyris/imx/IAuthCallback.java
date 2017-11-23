@@ -23,6 +23,7 @@ package de.nyris.imx;
  * Created by nyris GmbH
  * Copyright © 2017 nyris GmbH. All rights reserved.
  */
+@Deprecated
 public interface IAuthCallback extends ICallback{
     /**
      * On Success called when there are a valid AccessToken

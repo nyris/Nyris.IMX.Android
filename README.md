@@ -9,7 +9,7 @@ Supports >=4.1 Android devices
 For more information please see [nyris.io](https://nyris.io]/)
 
 ## Releases
-Current release is 1.2.2
+Current release is 1.3.0
 
 ## Download
 Download via Gradle:
@@ -52,15 +52,16 @@ public class YouApp_Or_Your_First_Activity{
 ### Set app key and IAuthCallback:
 Start nyris imx SDK by getting access to our APIs
 ```java
-public class SplashScreenActivity extends AppCompatActivity implements IAuthCallback {
+public class SplashScreenActivity extends AppCompatActivity implements /*Deprecated*/ IAuthCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ...
         //Set
         Nyris
             .getInstance()
-            //Enabling crash report will keep us updated in case you face issues with our SDK
-            .enableCrashReport(true)
+            //Deprecated
+            .enableCrashReport(true)            
+            //Deprecated
             .login(YOUR_CLIENT_ID, 
                 YOUR_SECRET, 
                 SplashScreenActivity.this);
@@ -243,7 +244,8 @@ public class MainActivity extends Activity{
     protected void onDestroy() {
         super.onDestroy();
         Nyris
-            .getInstance().clearAllTasks();
+            .getInstance()
+            .clearAllTasks();
     }
 }
 ```
