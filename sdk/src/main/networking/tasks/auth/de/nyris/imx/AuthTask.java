@@ -15,6 +15,8 @@
  */
 package de.nyris.imx;
 
+import android.content.Context;
+
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
@@ -41,14 +43,12 @@ class AuthTask extends BaseTask{
      * @param clientSecret A variable of type String
      * @param scope A variable of type Scope
      * @param endpoints A variable of type INyrisEndpoints
-     * @param reporter A variable of type ICrashReporter
      * @see Scope
      * @see INyrisEndpoints
-     * @see ICrashReporter
      */
-    AuthTask(IAuthCallback authCallback, String clientId, String clientSecret, Scope scope,
-                    INyrisEndpoints endpoints, ICrashReporter reporter){
-        super(authCallback, endpoints,reporter);
+    AuthTask(Context context, IAuthCallback authCallback, String clientId, String clientSecret, Scope scope,
+             INyrisEndpoints endpoints){
+        super(context, authCallback, endpoints);
         this.scope = scope;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -58,7 +58,7 @@ class AuthTask extends BaseTask{
 
     @Override
     protected Object doInBackground(Void... params) {
-        if(!Helpers.getInstance().isOnline())
+        if(!Helpers.isOnline(context))
             return null;
 
         RequestBody formBody = new FormEncodingBuilder()
@@ -67,14 +67,12 @@ class AuthTask extends BaseTask{
                 .add(ParamKeys.clientId, clientId)
                 .add(ParamKeys.clientSecret, clientSecret)
                 .build();
-        Response response = HttpRequestHelper.getInstance().post(endpoints.getOpenIdApi(), formBody, reporter);
+        Response response = HttpRequestHelper.post(endpoints.getOpenIdApi(), formBody);
         Object content = null;
         try {
             content = getResponseContent(response);
         } catch (Exception e) {
             e.printStackTrace();
-            if(reporter!= null)
-                reporter.reportException(e);
         }
         return content;
     }
@@ -89,7 +87,7 @@ class AuthTask extends BaseTask{
         }
         else {
             String strContent = (String) content;
-            evaluateContentAuthResponse(strContent, authCallback);
+            evaluateContentAuthResponse(context, strContent, authCallback);
         }
     }
 }

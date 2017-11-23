@@ -24,14 +24,9 @@ package de.nyris.imx;
  */
 class ParamKeys{
     static String grantType = "grant_type";
-    static String refreshToken = "refresh_token";
     static String scope = "scope";
     static String clientId = "client_id";
     static String clientSecret = "client_secret";
     static String accessToken = "accessToken";
     static String clientCredentials = "client_credentials";
-
-    static String live = "live_";
-    static String openId = "open_id_server";
-    static String api = "api_server";
 }

@@ -15,6 +15,7 @@
  */
 package de.nyris.imx;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
@@ -31,12 +32,12 @@ import java.util.Date;
  */
 
 class AuthManager implements IAuthManager {
+    private final Context mContext;
     private IAuthCallback callback;
     private String clientId;
     private String clientSecret;
     private Scope scope;
     private AuthTask authTask;
-    private ICrashReporter reporter;
     /**
      * Constructor
      * @param authCallback A variable of type IAuthCallback
@@ -44,24 +45,22 @@ class AuthManager implements IAuthManager {
      * @param clientSecret A variable of type String
      * @param scope A variable of type Scope
      * @param endpoints A variable of type INyrisEndpoints
-     * @param reporter A variable of type ICrashReporter     *
      * @see IAuthCallback
      * @see INyrisEndpoints
-     * @see ICrashReporter
      */
-    AuthManager(IAuthCallback authCallback, String clientId, String clientSecret,
-                       Scope scope, INyrisEndpoints endpoints, ICrashReporter reporter){
+    AuthManager(Context context, IAuthCallback authCallback, String clientId, String clientSecret,
+                Scope scope, INyrisEndpoints endpoints){
+        this.mContext = context;
         this.callback = authCallback;
         this.scope = scope;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.reporter = reporter;
-        authTask = new AuthTask(authCallback, clientId, clientSecret, scope, endpoints, reporter);
+        authTask = new AuthTask(mContext, authCallback, clientId, clientSecret, scope, endpoints);
     }
 
     @Override
     public AccessToken getToken() {
-        String accessTokeStr = Helpers.getInstance().getParam(ParamKeys.accessToken);
+        String accessTokeStr = Helpers.getParam(mContext, ParamKeys.accessToken);
         if(!accessTokeStr.isEmpty()){
             try {
                 Gson gson = new Gson();
@@ -69,7 +68,6 @@ class AuthManager implements IAuthManager {
                 return accessToken;
             }
             catch (Exception e){
-                reporter.reportException(e);
                 e.printStackTrace();
                 return null;
             }
