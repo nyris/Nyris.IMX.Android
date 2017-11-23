@@ -93,8 +93,6 @@ android {
 
         release {
             //minifyEnabled true
-            buildConfigField "String", "CLIENT_ID", "\""+System.getenv("PUBLIC_SDK_CLIENT_ID")+"\""
-            buildConfigField "String", "SECRET", "\""+System.getenv("PUBLIC_SDK_SECRET")+"\""
             buildConfigField "String", "LAST_COMMIT_HASH", getLastCommitHash()
             buildConfigField "String", "MAJOR_MINOR_PATCH", getMajorMinorPatch()
         }
@@ -122,17 +120,12 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support.test:rules:1.0.1'
     androidTestCompile "com.android.support:support-annotations:$supportLibraryVersion"
 
-    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
-    compile "com.google.firebase:firebase-core:$playLibraryVersion"
-    compile "com.google.firebase:firebase-crash:$playLibraryVersion"
-    compile "com.google.firebase:firebase-config:$playLibraryVersion"
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile "com.android.support:support-annotations:$supportLibraryVersion"
+    compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'com.facebook.stetho:stetho-okhttp:1.4.2'
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.0'
 }
-
-apply plugin: 'com.google.gms.google-services'

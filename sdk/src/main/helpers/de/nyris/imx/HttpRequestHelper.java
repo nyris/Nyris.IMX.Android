@@ -15,14 +15,9 @@
  */
 package de.nyris.imx;
 
-import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.facebook.stetho.okhttp.StethoInterceptor;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
@@ -30,31 +25,11 @@ import com.squareup.okhttp.Response;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HttpsURLConnection;
-
-class HttpRequestHelper extends Helper{
-    static HttpRequestHelper instance;
+class HttpRequestHelper{
     private static int timeout = 60;
-    private String userAgent;
-
-    /**
-     * A private constructor
-     */
-    private HttpRequestHelper(){}
-
-    /**
-     * Retrieve the value of the instance
-     * @return HttpRequestHelper instance
-     */
-    public static HttpRequestHelper getInstance(){
-        if(instance == null)
-            instance = new HttpRequestHelper();
-        return instance;
-    }
-
-    @Override
-    protected void init(Context context){
-        userAgent = context.getPackageName();
+    private static String userAgent;
+    static{
+        userAgent = "de.nyris.imx";
         userAgent += "/"+ BuildConfig.MAJOR_MINOR_PATCH;
         userAgent+= " ("+ BuildConfig.LAST_COMMIT_HASH+"; Android "+ Build.VERSION.RELEASE+")";
     }
@@ -63,12 +38,10 @@ class HttpRequestHelper extends Helper{
      * GET function that help to create and HTTP GET request
      * @param url A variable of type String
      * @param token A variable of type AccessToken
-     * @param reporter A variable of type ICrashReporter
-     * @see ICrashReporter
      * @see AccessToken
      * @return A Response of get request
      */
-    Response get(String url, AccessToken token, @NonNull ICrashReporter reporter){
+    static Response get(String url, AccessToken token){
         if(token == null)
             return null;
         OkHttpClient mHttpClient =  new OkHttpClient();
@@ -85,8 +58,7 @@ class HttpRequestHelper extends Helper{
             return mHttpClient.newCall(request).execute();
         }
         catch(Exception e){
-            reporter.reportException(e);
-            Log.e(HttpRequestHelper.class.getName(),e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
@@ -95,11 +67,9 @@ class HttpRequestHelper extends Helper{
      * POST function that help to create and HTTP GET request
      * @param url A variable of type String
      * @param formBody A Variable of type Request Body
-     * @param reporter A variable of type ICrashReporter
-     * @see ICrashReporter
      * @return A Response of get request
      */
-    Response post(String url, RequestBody formBody, @NonNull ICrashReporter reporter){
+    static Response post(String url, RequestBody formBody){
         OkHttpClient mHttpClient =  new OkHttpClient();
         if(NyrisEndpoints.DEBUG)
             mHttpClient.networkInterceptors().add(new StethoInterceptor());
@@ -114,7 +84,7 @@ class HttpRequestHelper extends Helper{
             return mHttpClient.newCall(request).execute();
         }
         catch (Exception e){
-            reporter.reportException(e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -122,12 +92,10 @@ class HttpRequestHelper extends Helper{
     /**
      * POST function that help to create and HTTP POST request
      * @param request A variable of type Request
-     * @param reporter A variable of type ICrashReporter
-     * @see ICrashReporter
      * @see AccessToken
      * @return A Response of post request
      */
-    Response post(Request request, ICrashReporter reporter) {
+    static Response post(Request request) {
         OkHttpClient mHttpClient =  new OkHttpClient();
         if(NyrisEndpoints.DEBUG)
             mHttpClient.networkInterceptors().add(new StethoInterceptor());
@@ -138,8 +106,7 @@ class HttpRequestHelper extends Helper{
             return mHttpClient.newCall(request).execute();
         }
         catch(Exception e){
-            reporter.reportException(e);
-            Log.e(HttpRequestHelper.class.getName(),e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

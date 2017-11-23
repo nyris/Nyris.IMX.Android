@@ -23,57 +23,16 @@ import android.net.ConnectivityManager;
  * Helpers.java - A class that contain different helpers
  *
  * @author Sidali Mellouk
- * @see Helper
  * Created by nyris GmbH
  * Copyright © 2017 nyris GmbH. All rights reserved.
  */
-public class Helpers extends Helper{
-    private static Helpers instance;
-    private Context context;
-    private ICrashReporter reporter;
-    /**
-     * A private constructor
-     */
-    private Helpers(){}
-
-    /**
-     * Retrieve the value of the instance
-     * @return Helpers instance
-     */
-    public static Helpers getInstance(){
-        if(instance == null){
-            instance = new Helpers();
-        }
-        return instance;
-    }
-
-    /**
-     * Init Minimum helpers like HttpRequest and HelperLocation
-     * @param context A variable of type Context
-     * @param reporter A variable of type ICrashReporter
-     * @see ICrashReporter
-     */
-    public void init(Context context, ICrashReporter reporter) {
-        this.context = context;
-        this.reporter = reporter;
-        HttpRequestHelper.getInstance().init(context);
-    }
-
-    /**
-     * Check if Helpers are initiated
-     */
-    private void checkIfHelpersIsinitiated(){
-        if(context == null)
-            throw new RuntimeException("No context set, you need to initialize nyris SDK");
-    }
-
+public class Helpers{
     /**
      * Save value to Shared Preferences
      * @param key A variable of type String
      * @param value A variable of type String
      */
-    public void saveParam(String key, String value){
-        checkIfHelpersIsinitiated();
+    static void saveParam(Context context, String key, String value){
         SharedPreferences mPrefs = context.getSharedPreferences(context.getApplicationContext().getPackageName(),
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
@@ -86,8 +45,7 @@ public class Helpers extends Helper{
      * @param key A variable of type String
      * @return String value of key
      */
-    public String getParam(String key){
-        checkIfHelpersIsinitiated();
+    static String getParam(Context context, String key){
         SharedPreferences mPrefs = context.getSharedPreferences(context.getApplicationContext().getPackageName(),
                 Context.MODE_PRIVATE);
         return mPrefs.getString(key, "");
@@ -97,29 +55,16 @@ public class Helpers extends Helper{
      * Check if there internet
      * @return Boolean value true for connected false for disconnected
      */
-    public boolean isOnline() {
+    public static boolean isOnline(Context context) {
         try{
-            checkIfHelpersIsinitiated();
             ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if(cm.getActiveNetworkInfo()== null)
                 return false;
             return cm.getActiveNetworkInfo().isConnectedOrConnecting();
         }
         catch (Exception e){
-            if(reporter!= null)
-                reporter.reportException(e);
             e.printStackTrace();
             return false;
         }
-    }
-
-
-    /**
-     * Get Text by id
-     * @param id A variable of type Int
-     * @return String value
-     */
-    public String getText(int id){
-        return context.getText(id).toString();
     }
 }

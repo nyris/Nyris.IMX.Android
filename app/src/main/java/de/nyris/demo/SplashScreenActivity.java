@@ -22,7 +22,7 @@ public class SplashScreenActivity extends AppCompatActivity implements IAuthCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        if(!Helpers.getInstance().isOnline()){
+        if(!Helpers.isOnline(this)){
             HelperDialog.messageBoxDialog(
                 this,
                 "No networks",
