@@ -29,7 +29,7 @@ class NyrisLiveEndpoints extends NyrisEndpoints{
      */
     NyrisLiveEndpoints(){
         super();
-        apiServer = Helpers.getInstance().getParam(ParamKeys.live+ParamKeys.api);
+        apiServer = "api.nyris.io";
         version = "v1";
     }
 }
