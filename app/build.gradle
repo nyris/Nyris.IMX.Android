@@ -31,12 +31,10 @@ android {
         debug {
             applicationIdSuffix ".debug"
             buildConfigField "String", "CLIENT_ID", "\""+System.getenv("PUBLIC_SDK_CLIENT_ID")+"\"" /*YOUR CLIENT ID*/
-            buildConfigField "String", "SECRET", "\""+System.getenv("PUBLIC_SDK_SECRET")+"\"" /*YOUR SECRECT*/
         }
         release {
             minifyEnabled false
             buildConfigField "String", "CLIENT_ID", "\""+System.getenv("PUBLIC_SDK_CLIENT_ID")+"\"" /*YOUR CLIENT ID*/
-            buildConfigField "String", "SECRET", "\""+System.getenv("PUBLIC_SDK_SECRET")+"\"" /*YOUR SECRECT*/
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -53,6 +51,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
-    compile "de.nyris:camera:0.51.2"
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+    compile "de.nyris:camera:0.55.3"
     compile project(":sdk")
 }
