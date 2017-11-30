@@ -9,7 +9,7 @@ Supports >=4.1 Android devices
 For more information please see [nyris.io](https://nyris.io]/)
 
 ## Releases
-Current release is 1.3.0
+Current release is 1.4.0
 
 ## Download
 Download via Gradle:
@@ -30,13 +30,13 @@ dependencies {
 ## Get Started
 #### Jump to Section
 * [Init SDK First](#init-the-sdk-first)
-* [Set app key and IAuthCallback](#set-app-key-and-iauthcallback)
 * [Integrate nyris Camera](#integrate-nyris-camera)
 * [Match Taken Pictures](#match-taken-pictures)
+* [Extract Objects from Pictures](#extract-objects-from-pictures)
 * [Clear running or pending tasks](#clear-running-or-pending-tasks)
 
 ### Init SDK First:
-Init yoru SDK before to start anything else 
+Init your SDK before to start anything else 
 ```java
 public class YouApp_Or_Your_First_Activity{    
     @Override
@@ -44,40 +44,7 @@ public class YouApp_Or_Your_First_Activity{
         super.onCreate();
 
         //Init the SDK
-        Nyris.getInstance().init(this);
-    }
-}
-```
-
-### Set app key and IAuthCallback:
-Start nyris imx SDK by getting access to our APIs
-```java
-public class SplashScreenActivity extends AppCompatActivity implements /*Deprecated*/ IAuthCallback {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        ...
-        //Set
-        Nyris
-            .getInstance()
-            //Deprecated
-            .enableCrashReport(true)            
-            //Deprecated
-            .login(YOUR_CLIENT_ID, 
-                YOUR_SECRET, 
-                SplashScreenActivity.this);
-    }
-
-    @Override
-    public void onSuccess(AccessToken accessToken) {
-        //When it's success login, AccessToken is managed by nyris SDK you don't need to save it
-        Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
-    public void onError(ResponseError responseError) {
-        //When it's error
+        Nyris.getInstance().init(this, BuildConfig.CLIENT_ID);
     }
 }
 ```
@@ -94,7 +61,7 @@ repositories {
 
 dependencies {
     ...
-    compile "de.nyris:camera:0.46.1"
+    compile "de.nyris:camera:0.55.3"
 }
 ```
 
@@ -123,9 +90,9 @@ public class MainActivity extends Activity implements Callback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ...
-         camera = (CameraView) findViewById(R.id.camera);
-                                camera.addCallback(this);
-                                camera.start();
+        camera = (CameraView) findViewById(R.id.camera);
+        camera.addCallback(this);
+        camera.start();
         ...
     }
 
@@ -156,39 +123,13 @@ public class MainActivity extends Activity implements Callback {
             }
         }
     }
-
-   @Override
-   public void onCameraOpened(CameraView cameraView) {
-        //On Camera Opened
-   }
-
-   @Override
-   public void onCameraClosed(CameraView cameraView) {
-        //On Camera Closed
-   }
-
-   @Override
-   public void onPictureTaken(CameraView cameraView, byte[] data) {
-       //On Picture Taken
-   } 
-   
-   @Override
-   public boolean isWithExif() {
-        // Put this to true if you want to get byte array with exif information
-       return false;
-   }  
-
-   @Override
-   public void onError(CameraView cameraView, String errorMessage) {
-       //On Camera Error
-   }
     ...
 }
 ```
 
 ### Match Taken Pictures
 
-Demo sample to match taken pcitures
+Demo sample to match taken pictures, before you send a byte array to the SDK you need to insure that the minimum size of the picture is 512x512 and maximum size is low than 0.5mb.
 ```java
 public class MainActivity extends Activity implements Callback {
     public void onCreate(Bundle savedInstanceState) {
@@ -213,11 +154,6 @@ public class MainActivity extends Activity implements Callback {
                     }
 
                     @Override
-                    public void onMatched(JSONObject jsonObject) {
-                        //onMatched JsonObject
-                    }
-
-                    @Override
                     public void onMatched(String json) {
                         //onMatched String Json
                     }
@@ -234,6 +170,47 @@ public class MainActivity extends Activity implements Callback {
     ...
 }
 ```
+
+### Extract Objects from Pictures
+Demo sample to extract object from pictures, before you send a byte array to the SDK you need to insure that the minimum size of the picture is 512x512 and maximum size is low than 0.5mb.
+```java
+public class MainActivity extends Activity implements Callback {
+    public void onCreate(Bundle savedInstanceState) {
+        ...
+        View btnTakePicture = findViewById(R.id.btnTakePicture);
+        btnTakePicture.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                camera.takePicture();
+            }
+        });
+    }
+
+    //On taken picture from nyris Camera
+    @Override
+    public void onTakenPicture(byte[] image) {
+        byte[] image = getIntent().getExtras().getByteArray("image");
+        Nyris.getInstance()
+                .extractObjects(data, new IObjectExtractCallback() {
+                      @Override
+                      public void onObjectExtracted(List<ObjectProposal> objectProposals) {
+                          //Extracted objects 
+                      }
+    
+                      @Override
+                      public void onObjectExtracted(String json) {
+    
+                      }
+    
+                      @Override
+                      public void onError(ResponseError error) {
+                          //onError
+                      }
+                  });
+    }
+    ...
+}
+```
+
 
 ### Clear running or pending tasks
 To clear pending or running background tasks

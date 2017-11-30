@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.4.0 - 2017-11-30
+### Added
+- object proposal feature
+
+### Update
+- gradle to 3.0.0
+- update used libs in SDK
+- introduced compile only in the SDK build.gradle
+
+### Removed
+- login call from the SDK
+- AuthManger
+- AccessToken 
+- AuthTask
+- Deprecated calls like login and enableCrushReporting 
+- onMatched(JsonObject) call from IMatchCallback
+
+### Modified 
+- init SDK with Client Id
+- version of gson and okhttp library  
+
+
+
 ## 1.3.0 - 2017-11-23
 ### Added
 - Some deprecated methods
