@@ -20,4 +20,5 @@
     <string name="error_token_getting">"Unable to get token please check your network or your scope with your nyris."</string>
     <string name="error_no_network_msg">"No networks available, please check your network connection."</string>
     <string name="error_offer_not_found">"Offer not found."</string>
+    <string name="error_object_not_found">"No objectsfound."</string>
 </resources>
