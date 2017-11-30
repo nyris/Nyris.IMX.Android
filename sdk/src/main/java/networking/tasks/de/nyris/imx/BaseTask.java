@@ -20,19 +20,17 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import okhttp3.Response;
+
 class BaseTask extends AsyncTask<Void, Void, Object> {
-    final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     Context context;
-    private ICallback callback;
-    AccessToken accessToken;
+    String clientId;
+    ICallback callback;
     INyrisEndpoints endpoints;
     ResponseError responseError;
 
@@ -40,32 +38,17 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
      * Constructor
      * @param context A Variable of type Context
      * @param callback A Variable of type ICallback
-     * @param accessToken A Variable of type AccessToken
      * @param endpoints A variable of type INyrisEndpoints
      * @see ICallback
-     * @see AccessToken
      * @see INyrisEndpoints
      */
-    public BaseTask(Context context, ICallback callback, AccessToken accessToken, INyrisEndpoints endpoints){
+    BaseTask(Context context, String clientId, ICallback callback, INyrisEndpoints endpoints){
         this.context = context;
-        this.callback = callback;
-        this.accessToken = accessToken;
-        this.endpoints = endpoints;
-        this.responseError = new ResponseError();
-    }
-
-    /**
-     * Constructor
-     * @param endpoints A variable of type INyrisEndpoints
-     * @see INyrisEndpoints
-     */
-    public BaseTask(Context context, ICallback callback, INyrisEndpoints endpoints){
-        this.context = context;
+        this.clientId = clientId;
         this.callback = callback;
         this.endpoints = endpoints;
         this.responseError = new ResponseError();
     }
-
 
     /**
      * Check Network availability before start any requests
@@ -158,40 +141,5 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
                 errorCode = ResponseCode.HTTP_UNKNOWN_ERROR;
         }
         return errorCode;
-    }
-
-    /**
-     * Evaluate Content of Authentication Response
-     * @param content A variable of type String
-     * @param authCallback A variable of type IAuthCallback
-     * @return value of AccessToken
-     * @see IAuthCallback
-     * @see AccessToken
-     */
-    static AccessToken evaluateContentAuthResponse(Context context, String content, IAuthCallback authCallback){
-        try{
-            Gson gson = new Gson();
-            AccessToken token = gson.fromJson(content, AccessToken.class);
-            token.setCreationDate();
-            Helpers.saveParam(context, ParamKeys.accessToken, gson.toJson(token));
-            if(token.getAccessToken() == null || token.getAccessToken().isEmpty()){
-                ResponseError responseError = new ResponseError();
-                responseError.setErrorCode(ResponseCode.ACCESS_TOKEN_ERROR);
-                responseError.setErrorDescription(context.getString( R.string.error_token_getting));
-                authCallback.onError(responseError);
-                return null;
-            }
-            if(authCallback!= null)
-                authCallback.onSuccess(token);
-            return token;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            ResponseError responseError = new ResponseError();
-            responseError.setErrorCode(ResponseCode.UNKNOWN_ERROR);
-            responseError.setErrorDescription(content);
-            authCallback.onError(responseError);
-        }
-        return null;
     }
 }

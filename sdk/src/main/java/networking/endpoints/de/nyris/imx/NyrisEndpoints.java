@@ -26,10 +26,10 @@ import android.net.Uri;
  */
 
 public abstract class NyrisEndpoints implements INyrisEndpoints{
-    public static boolean DEBUG = false;
     private String scheme;
     String apiServer;
     String version;
+    public static boolean DEBUG;
 
     NyrisEndpoints()
     {
@@ -38,17 +38,6 @@ public abstract class NyrisEndpoints implements INyrisEndpoints{
 
     public static INyrisEndpoints getInstance(){
         return new NyrisLiveEndpoints();
-    }
-
-    @Override
-    public String getOpenIdApi() {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(scheme)
-                .authority(apiServer)
-                .appendPath("connect")
-                .appendPath("token");
-
-        return builder.build().toString();
     }
 
     @Override
@@ -74,6 +63,17 @@ public abstract class NyrisEndpoints implements INyrisEndpoints{
                     .appendQueryParameter("lon", String.valueOf(lon))
                     .appendQueryParameter("acc", String.valueOf(acc));
         }
+        return builder.build().toString();
+    }
+
+    @Override
+    public String getObjectProposalApi() {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(scheme)
+                .authority(apiServer)
+                .appendPath("find")
+                .appendPath(version)
+                .appendPath("regions");
         return builder.build().toString();
     }
 }

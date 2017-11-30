@@ -25,19 +25,11 @@ import android.content.Context;
  */
 public interface INyris {
     /**
-     * Enable Crash report that help nyris team to fix your issues quickly before your notice :P
-     * @param isEnabled A variable of type boolean
-     * @return Current Instance of the SDK
-     * @deprecated this method will be remove in the version 1.4.0
+     * Init SDK
+     * @param context A variable of type Context
+     * @param clientId A variable of type String
      */
-    @Deprecated
-    INyris enableCrashReport(boolean isEnabled);
-
-    /**
-     * Check if isCrash Report is enabled
-     * @return Boolean, if true meaning is enabled, if false meaning is disabled
-     */
-    boolean isCrashReport();
+    void init(Context context, String clientId);
 
     /**
      * Get Nyris endpoints
@@ -53,15 +45,10 @@ public interface INyris {
     String getClientId();
 
     /**
-     * Login with clientId and secret
+     * Set clientId with clientId and secret
      * @param clientId A variable of type String
-     * @param clientSecret A variable of type String
-     * @param authCallback A variable of type IAuthCallback
-     * @see IAuthCallback
-     * @deprecated this method will be remove in the version 1.4.0, you will be asked to set your clientId only
      */
-    @Deprecated
-    void login(String clientId, String clientSecret, IAuthCallback authCallback);
+    void setClientId(String clientId);
 
     /**
      * Match an image
@@ -81,13 +68,15 @@ public interface INyris {
     void match(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback);
 
     /**
+     * Extract object from picture
+     * @param image A variable of type of array of bytes
+     * @param callback A variable of type IObjectExtractCallback
+     * @see IObjectExtractCallback
+     */
+    void extractObjects(byte[] image, IObjectExtractCallback callback);
+
+    /**
      * Clear pending or running Tasks
      */
     void clearAllTasks();
-
-    /**
-     * Init SDK
-     * @param context A variable of type Context
-     */
-    void init(Context context);
 }

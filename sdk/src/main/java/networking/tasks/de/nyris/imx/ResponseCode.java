@@ -30,8 +30,7 @@ class ResponseCode {
     static String UNKNOWN_ERROR = "UNKNOWN_ERROR";
     static String HTTP_NOT_FOUND = "HTTP_NOT_FOUND";
     static String NO_INTERNET = "NO_INTERNET";
-    static String ACCESS_TOKEN_ERROR = "ONE_TIME_PASSWORD_ERROR";
-    static String JSON_ERROR = "JSON_ERROR";
     static String IMAGE_NOT_FOUND_ERROR = "IMAGE_NOT_FOUND_ERROR";
+    static String OBJECT_NOT_FOUND_ERROR = "OBJECT_NOT_FOUND_ERROR";
     static String HTTP_TIME_OUT = "HTTP_TIME_OUT";
 }

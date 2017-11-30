@@ -15,37 +15,32 @@
  */
 package de.nyris.imx;
 
-import org.json.JSONObject;
-
-import java.util.List;
-
-
 /**
- * IMatchCallback.java - An interface that contain the status definition of Image Matching API
+ * INyrisEndpoints.java - An interface that contain the definition of different nyris api
  *
- * @see ICallback
  * @author Sidali Mellouk
  * Created by nyris GmbH
  * Copyright © 2017 nyris GmbH. All rights reserved.
  */
-public interface IMatchCallback extends ICallback{
+interface INyrisEndpoints {
+    /**
+     * Get Image Matching API URL
+     * @return A String URL
+     */
+    String getImageMatchingApi();
 
     /**
-     * On Matched called when there are matched offers of the sent picture
-     * @param offerInfos A list of variable of type OfferInfos
-     * @see OfferInfo
+     * Get and compose Image Matching API URL with latitude, longitude and accuracy
+     * @param lat A variable of type double
+     * @param lon A variable of type double
+     * @param acc A variable of type double
+     * @return A String URL
      */
-    void onMatched(List<OfferInfo> offerInfos);
+    String getImageMatchingApi(double lat, double lon, double acc);
 
     /**
-     * On Matched called when there are matched offers of the sent picture
-     * @param jsonObject A variable of type JSONObject
+     * Get Image Matching API URL
+     * @return A String URL
      */
-    void onMatched(JSONObject jsonObject);
-
-    /**
-     * On Matched called when there are matched offers of the sent picture
-     * @param json A variable of type String
-     */
-    void onMatched(String json);
+    String getObjectProposalApi();
 }

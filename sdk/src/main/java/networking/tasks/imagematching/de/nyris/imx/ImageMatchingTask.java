@@ -18,15 +18,16 @@ package de.nyris.imx;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * ImageMatchingTask.java - Async Task class that send request to Image matching API to get matched
@@ -38,29 +39,30 @@ import java.util.List;
  * Copyright © 2017 nyris GmbH. All rights reserved.
  */
 class ImageMatchingTask extends BaseTask{
-    private double lat;
-    private double lon;
-    private double acc;
+    private double lat = -1;
+    private double lon = -1;
+    private double acc = -1;
     private byte[] image;
     private boolean isOnlySimilarOffers;
     private IMatchCallback matchCallback;
 
     /**
      * Constructor
+     * @param context A variable of type Context
+     * @param clientId A variable of type String
      * @param image A variable of type array of bytes
      * @param lat A variable of type double
      * @param lon A variable of type double
      * @param acc A variable of type double
      * @param matchCallback A variable of type IMatchCallback
-     * @param accessToken A Variable of type AccessToken
-     * @param endpoints A variable of type INyrisEndpoints=
+     * @param endpoints A variable of type INyrisEndpoints
+     * @see Context
      * @see IMatchCallback
-     * @see AccessToken
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, byte[] image, double lat, double lon, double acc, IMatchCallback matchCallback, AccessToken accessToken,
-                      INyrisEndpoints endpoints){
-        super(context, matchCallback,accessToken,endpoints);
+    ImageMatchingTask(Context context, String clientId, byte[] image, double lat, double lon, double acc,
+                      IMatchCallback matchCallback, INyrisEndpoints endpoints){
+        super(context, clientId, matchCallback,endpoints);
         this.image = image;
         this.lat = lat;
         this.lon = lon;
@@ -70,51 +72,60 @@ class ImageMatchingTask extends BaseTask{
 
     /**
      * Constructor
+     * @param context A variable of type Context
+     * @param clientId A variable of type String
      * @param image A variable of type array of bytes
      * @param matchCallback A variable of type IMatchCallback
-     * @param accessToken A Variable of type AccessToken
      * @param endpoints A variable of type INyrisEndpoints
+     * @see Context
      * @see IMatchCallback
-     * @see AccessToken
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, byte[] image, IMatchCallback matchCallback, AccessToken accessToken, INyrisEndpoints endpoints){
-        super(context, matchCallback, accessToken,endpoints);
+    ImageMatchingTask(Context context, String clientId, byte[] image,
+                      IMatchCallback matchCallback, INyrisEndpoints endpoints){
+        super(context, clientId, matchCallback,endpoints);
         this.image = image;
         this.matchCallback = matchCallback;
     }
 
     /**
      * Constructor
+     * @param context A variable of type Context
+     * @param clientId A variable of type String
      * @param image A variable of type array of bytes
+     * @param isOnlySimilarOffers A variable of type boolean
      * @param matchCallback A variable of type IMatchCallback
-     * @param accessToken A Variable of type AccessToken
      * @param endpoints A variable of type INyrisEndpoints
+     * @see Context
      * @see IMatchCallback
-     * @see AccessToken
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback,
-                      AccessToken accessToken, INyrisEndpoints endpoints){
-        this(context, image, matchCallback,accessToken, endpoints);
+    ImageMatchingTask(Context context, String clientId, byte[] image, boolean isOnlySimilarOffers,
+                      IMatchCallback matchCallback, INyrisEndpoints endpoints){
+        this(context, clientId, image, matchCallback, endpoints);
         this.isOnlySimilarOffers = isOnlySimilarOffers;
     }
 
     @Override
     protected Object doInBackground(Void... params) {
         //Build Request
+        String strEndpoints = null;
+        if(lat == -1)
+            strEndpoints = endpoints.getImageMatchingApi();
+        else
+            strEndpoints = endpoints.getImageMatchingApi(lat, lon, acc);
+
         Request.Builder builder = new Request.Builder()
-                .url(endpoints.getImageMatchingApi())
-                .addHeader("Authorization", accessToken.getTokenType() + " " + accessToken.getAccessToken())
+                .url(strEndpoints)
+                .addHeader("X-Api-Key", clientId)
                 .addHeader("Content-Length", image.length+"")
                 //Add this if you want to get offers based on our Model
                 .addHeader("Accept", "application/offers.everybag+json");
         if(isOnlySimilarOffers)
-            builder.addHeader("X-Only-Semantic-Search","mario");
-
+            builder.addHeader("X-Only-Semantic-Search","nyris");
         builder.post(RequestBody.create(MediaType.parse("image/jpg"), image));
 
-        Response response = HttpRequestHelper.post(builder.build());
+        Response response = HttpRequestHelper.post(builder);
         Object content = null;
         try {
             content = getResponseContent(response);
@@ -141,15 +152,6 @@ class ImageMatchingTask extends BaseTask{
             try {
                 if(!strContent.isEmpty())
                     matchCallback.onMatched(strContent);
-                if(!strContent.isEmpty())
-                    try {
-                        matchCallback.onMatched(new JSONObject(strContent));
-                    } catch (JSONException e) {
-                        responseError.setErrorCode(ResponseCode.JSON_ERROR);
-                        responseError.setErrorDescription(e.getMessage());
-                        matchCallback.onError(responseError);
-                        e.printStackTrace();
-                    }
                 ResponseImage responseImage = new Gson().fromJson(strContent, ResponseImage.class);
                 if(responseImage != null){
                     List<OfferInfo> offerInfos = responseImage.getOfferInfos();
