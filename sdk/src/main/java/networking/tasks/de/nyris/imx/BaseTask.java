@@ -89,8 +89,7 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
             e.printStackTrace();
         }
         Log.i("error code : "+response.code(),content);
-        switch (response.code())
-        {
+        switch (response.code()){
             case HttpsURLConnection.HTTP_OK:
             case HttpsURLConnection.HTTP_CREATED:
             case HttpsURLConnection.HTTP_NO_CONTENT:
@@ -105,13 +104,13 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
                 }
                 catch (Exception ignored){}
 
-                if(responseError == null)
-                {
+                if(responseError == null){
                     responseError = new ResponseError();
                     responseError.setErrorCode(convertErrorResponseCode(response));
-                    if(content == null || content.isEmpty())
-                        content = "Unknown Error";
-                    responseError.setErrorDescription(content.toString());
+                    String message = response.message();
+                    if(message == null || message.isEmpty())
+                        message = "Unknown Error";
+                    responseError.setErrorDescription(message);
                 }
                 return responseError;
         }
@@ -136,6 +135,9 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
                 break;
             case HttpsURLConnection.HTTP_NOT_FOUND :
                 errorCode = ResponseCode.HTTP_NOT_FOUND;
+                break;
+            case HttpsURLConnection.HTTP_ENTITY_TOO_LARGE :
+                errorCode = ResponseCode.HTTP_ENTITY_TOO_LARGE;
                 break;
             default:
                 errorCode = ResponseCode.HTTP_UNKNOWN_ERROR;

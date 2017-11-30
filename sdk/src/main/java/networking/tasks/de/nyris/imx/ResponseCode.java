@@ -32,5 +32,6 @@ class ResponseCode {
     static String NO_INTERNET = "NO_INTERNET";
     static String IMAGE_NOT_FOUND_ERROR = "IMAGE_NOT_FOUND_ERROR";
     static String OBJECT_NOT_FOUND_ERROR = "OBJECT_NOT_FOUND_ERROR";
+    static String HTTP_ENTITY_TOO_LARGE = "HTTP_ENTITY_TOO_LARGE";
     static String HTTP_TIME_OUT = "HTTP_TIME_OUT";
 }
