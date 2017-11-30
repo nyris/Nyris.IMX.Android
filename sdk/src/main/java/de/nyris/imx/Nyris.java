@@ -32,21 +32,19 @@ import java.util.List;
  */
 public class Nyris implements INyris {
     private static Nyris instance;
-    private boolean isCrashReport;
     private List<AsyncTask> tasks;
     private Context mContext;
-
-    //Managers
-    private IAuthManager authManager;
-
-    //Endpoints
     private INyrisEndpoints endpoints;
+    private String mClientId;
 
     @Override
-    public void init(Context context){
+    public void init(Context context, String clientId){
         if(context == null)
             throw new RuntimeException("Context is null");
+        if(clientId == null)
+            throw new RuntimeException("clientId is null, you need to set your client id!");
         mContext = context;
+        mClientId = clientId;
         tasks = new ArrayList<>();
         endpoints = NyrisEndpoints.getInstance();
     }
@@ -62,23 +60,12 @@ public class Nyris implements INyris {
         return instance;
     }
 
-    public static INyris getInstance(Context context){
+    public static INyris getInstance(Context context, String clientId){
         if(instance == null){
             instance = new Nyris();
-            instance.init(context);
+            instance.init(context, clientId);
         }
         return instance;
-    }
-
-    @Override
-    public INyris enableCrashReport(boolean isEnbaled) {
-        this.isCrashReport = isEnbaled;
-        return this;
-    }
-
-    @Override
-    public boolean isCrashReport() {
-        return isCrashReport;
     }
 
     @Override
@@ -87,59 +74,52 @@ public class Nyris implements INyris {
     }
 
     public String getClientId() {
-        return authManager== null ? null : authManager.getClientId();
+        return mClientId;
     }
 
     @Override
-    public void login(final @NonNull String clientId, final @NonNull String clientSecret,
-                      final @NonNull IAuthCallback authCallback){
-        loginWithClientIdAndSecret(clientId, clientSecret, Scope.image_matching, authCallback);
-    }
-
-    /**
-     * Login with client id and secret
-     * @param clientId A variable of type String
-     * @param clientSecret A varibale of type String
-     * @param scope A variable of type Scope
-     * @param authCallback A varibale of type IAuthCallback
-     * @see Scope
-     * @see IAuthCallback
-     */
-    private void loginWithClientIdAndSecret(String clientId, String clientSecret, Scope scope, IAuthCallback authCallback){
-        endpoints = new NyrisLiveEndpoints();
-        authManager = new AuthManager(mContext,authCallback,clientId,clientSecret, scope, endpoints);
-        authManager.execute();
+    public void setClientId(final @NonNull String clientId){
+        mClientId = clientId;
     }
 
     @Override
     public void match(final @NonNull byte[] image, final @NonNull IMatchCallback matchCallback) {
-        if(authManager == null || authManager.getToken() == null)
-            throw new RuntimeException("You need to login first before using match image");
-        ImageMatchingTask task = new ImageMatchingTask(mContext,image,matchCallback, authManager.getToken(), endpoints);
+        if(mClientId == null)
+            throw new RuntimeException("clientId is null, you need to set your client id!");
+        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, matchCallback, endpoints);
         task.execute();
         tasks.add(task);
     }
 
     @Override
     public void match(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback) {
-        if(authManager == null || authManager.getToken() == null)
-            throw new RuntimeException("You need to login first before using match image");
-        ImageMatchingTask task = new ImageMatchingTask(mContext, image,isOnlySimilarOffers, matchCallback, authManager.getToken(), endpoints);
+        if(mClientId == null)
+            throw new RuntimeException("clientId is null, you need to set your client id!");
+        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, isOnlySimilarOffers, matchCallback, endpoints);
+        task.execute();
+        tasks.add(task);
+    }
+
+    @Override
+    public void extractObjects(byte[] image, IObjectExtractCallback callback) {
+        if(mClientId == null)
+            throw new RuntimeException("clientId is null, you need to set your client id!");
+        ObjectProposalTask task = new ObjectProposalTask(mContext, mClientId, image, callback, endpoints);
         task.execute();
         tasks.add(task);
     }
 
     @Override
     public void clearAllTasks() {
-        if(authManager == null)
+        if(tasks == null)
             return;
-        authManager.cancel();
         for (AsyncTask task : tasks) {
-            if(task.getStatus() != AsyncTask.Status.FINISHED)
-                task.cancel(true);
+            try {
+                if(task.getStatus() != AsyncTask.Status.FINISHED)
+                    task.cancel(true);
+            }
+            catch (Exception ignore){}
         }
-        for (AsyncTask task : tasks) {
-            tasks.remove(task);
-        }
+        tasks.clear();
     }
 }
