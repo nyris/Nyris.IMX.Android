@@ -29,7 +29,7 @@ dependencies {
 
 ## Get Started
 #### Jump to Section
-* [Init SDK First](#init-the-sdk-first)
+* [Init SDK First](#init-sdk-first)
 * [Integrate nyris Camera](#integrate-nyris-camera)
 * [Match Taken Pictures](#match-taken-pictures)
 * [Extract Objects from Pictures](#extract-objects-from-pictures)
