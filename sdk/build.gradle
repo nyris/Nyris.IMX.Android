@@ -71,18 +71,18 @@ android {
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/activities'
-        main.java.srcDirs += 'src/main/interfaces'
-        main.java.srcDirs += 'src/main/callbacks'
-        main.java.srcDirs += 'src/main/exceptions'
-        main.java.srcDirs += 'src/main/analytics'
-        main.java.srcDirs += 'src/main/helpers'
-        main.java.srcDirs += 'src/main/models'
-        main.java.srcDirs += 'src/main/networking'
-        main.java.srcDirs += 'src/main/networking/endpoints'
-        main.java.srcDirs += 'src/main/networking/tasks'
-        main.java.srcDirs += 'src/main/networking/tasks/auth'
-        main.java.srcDirs += 'src/main/networking/tasks/imagematching'
+        main.java.srcDirs += 'src/main/java/activities'
+        main.java.srcDirs += 'src/main/java/interfaces'
+        main.java.srcDirs += 'src/main/java/callbacks'
+        main.java.srcDirs += 'src/main/java/exceptions'
+        main.java.srcDirs += 'src/main/java/analytics'
+        main.java.srcDirs += 'src/main/java/helpers'
+        main.java.srcDirs += 'src/main/java/models'
+        main.java.srcDirs += 'src/main/java/networking'
+        main.java.srcDirs += 'src/main/java/networking/endpoints'
+        main.java.srcDirs += 'src/main/java/networking/tasks'
+        main.java.srcDirs += 'src/main/java/networking/tasks/auth'
+        main.java.srcDirs += 'src/main/java/networking/tasks/imagematching'
     }
 
     buildTypes {
@@ -116,16 +116,8 @@ uploadArchives {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
-    androidTestCompile "com.android.support:support-annotations:$supportLibraryVersion"
-
     compile "com.android.support:support-annotations:$supportLibraryVersion"
-    compile 'com.squareup.okhttp:okhttp:2.7.2'
-    compile 'com.facebook.stetho:stetho-okhttp:1.4.2'
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compileOnly 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }

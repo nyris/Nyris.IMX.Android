@@ -29,7 +29,9 @@ import java.util.List;
 import de.nyris.camera.Callback;
 import de.nyris.camera.CameraView;
 import de.nyris.imx.IMatchCallback;
+import de.nyris.imx.IObjectExtractCallback;
 import de.nyris.imx.Nyris;
+import de.nyris.imx.ObjectProposal;
 import de.nyris.imx.OfferInfo;
 import de.nyris.imx.ResponseError;
 
@@ -92,18 +94,30 @@ public class MainActivity extends AppCompatActivity implements Callback {
     }
 
     @Override
-    public void onPictureTaken(CameraView cameraView, byte[] data) {
+    public void onPictureTaken(CameraView cameraView, final byte[] data) {
         //Match taken picture
         Nyris.getInstance()
                 .match(data, new IMatchCallback() {
                     @Override
-                    public void onMatched(List<OfferInfo> offerInfos) {
-                        //Render results
-                        HelperDialog.messageBoxDialog(MainActivity.this, "Success", "Count offers : "+offerInfos.size() ,null);
-                    }
+                    public void onMatched(final List<OfferInfo> offerInfos) {
+                        Nyris.getInstance().extractObjects(data, new IObjectExtractCallback() {
+                            @Override
+                            public void onObjectExtracted(List<ObjectProposal> objectProposals) {
+                                //Render results
+                                HelperDialog.messageBoxDialog(MainActivity.this, "Success", "Count offers : "+offerInfos.size() +
+                                        "\nCount Extracted Objects : " +objectProposals.size(),null);
+                            }
 
-                    @Override
-                    public void onMatched(JSONObject jsonObject) {
+                            @Override
+                            public void onObjectExtracted(String json) {
+
+                            }
+
+                            @Override
+                            public void onError(ResponseError error) {
+                                HelperDialog.messageBoxDialog(MainActivity.this, "Error", error.getErrorDescription(),null);
+                            }
+                        });
                     }
 
                     @Override
@@ -118,7 +132,12 @@ public class MainActivity extends AppCompatActivity implements Callback {
     }
 
     @Override
-    public void onError(CameraView cameraView, String errorMessage) {
+    public void onPictureTakenOriginal(CameraView cameraView, byte[] bytes) {
+
+    }
+
+    @Override
+    public void onError(String errorMessage) {
         HelperDialog.messageBoxDialog(MainActivity.this, "Camera error", errorMessage,null);
     }
 
