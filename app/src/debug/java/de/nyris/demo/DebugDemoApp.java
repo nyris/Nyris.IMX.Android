@@ -16,7 +16,6 @@
 package de.nyris.demo;
 
 import android.app.Application;
-
 import com.facebook.stetho.Stetho;
 
 import de.nyris.imx.Nyris;
@@ -28,6 +27,6 @@ public class DebugDemoApp extends Application {
         super.onCreate();
         NyrisEndpoints.DEBUG = BuildConfig.DEBUG;
         Stetho.initializeWithDefaults(this);
-        Nyris.getInstance().init(this);
+        Nyris.getInstance().init(this, BuildConfig.CLIENT_ID);
     }
 }
