@@ -129,7 +129,8 @@ public class MainActivity extends Activity implements Callback {
 
 ### Match Taken Pictures
 
-Demo sample to match taken pictures, before you send a byte array to the SDK you need to insure that the minimum size of the picture is 512x512 and maximum size is low than 0.5mb.
+Demo sample to match taken pictures, before you send a byte array to the SDK you need to insure that the minimum size of the picture is 512x512 and maximum size is low than 0.5mb and the media type of the images must be *.JPEG/*.JPG.
+
 ```java
 public class MainActivity extends Activity implements Callback {
     public void onCreate(Bundle savedInstanceState) {
@@ -172,7 +173,8 @@ public class MainActivity extends Activity implements Callback {
 ```
 
 ### Extract Objects from Pictures
-Demo sample to extract object from pictures, before you send a byte array to the SDK you need to insure that the minimum size of the picture is 512x512 and maximum size is low than 0.5mb.
+Demo sample to extract object from pictures, before you send a byte array to the SDK you need to insure that the minimum size of the picture is 512x512 and maximum size is low than 0.5mb and the media type of the images must be *.JPEG/*.JPG.
+
 ```java
 public class MainActivity extends Activity implements Callback {
     public void onCreate(Bundle savedInstanceState) {
