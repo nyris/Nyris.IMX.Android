@@ -9,7 +9,7 @@ Supports >=4.1 Android devices
 For more information please see [nyris.io](https://nyris.io]/)
 
 ## Releases
-Current release is 1.4.0
+Current release is 1.5.0
 
 ## Download
 Download via Gradle:
@@ -44,7 +44,10 @@ public class YouApp_Or_Your_First_Activity{
         super.onCreate();
 
         //Init the SDK
-        Nyris.getInstance().init(this, BuildConfig.CLIENT_ID);
+        Nyris.getInstance()
+                .init(this, BuildConfig.CLIENT_ID)
+                //You can set your own output format
+                /*.setOutputformat("YOUR_OUTPUT_FORMAT")*/;
     }
 }
 ```
