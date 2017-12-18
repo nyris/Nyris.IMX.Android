@@ -19,9 +19,6 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -43,6 +40,7 @@ class ImageMatchingTask extends BaseTask{
     private double lon = -1;
     private double acc = -1;
     private byte[] image;
+    private String outputFormat;
     private boolean isOnlySimilarOffers;
     private IMatchCallback matchCallback;
 
@@ -51,6 +49,7 @@ class ImageMatchingTask extends BaseTask{
      * @param context A variable of type Context
      * @param clientId A variable of type String
      * @param image A variable of type array of bytes
+     * @param outputFormat A variable of type String
      * @param lat A variable of type double
      * @param lon A variable of type double
      * @param acc A variable of type double
@@ -60,14 +59,19 @@ class ImageMatchingTask extends BaseTask{
      * @see IMatchCallback
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, String clientId, byte[] image, double lat, double lon, double acc,
+    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat,double lat, double lon, double acc,
                       IMatchCallback matchCallback, INyrisEndpoints endpoints){
         super(context, clientId, matchCallback,endpoints);
         this.image = image;
+        this.outputFormat = outputFormat;
         this.lat = lat;
         this.lon = lon;
         this.acc = acc;
         this.matchCallback = matchCallback;
+
+        if(this.outputFormat == null){
+            this.outputFormat = "application/offers.everybag+json";
+        }
     }
 
     /**
@@ -75,17 +79,16 @@ class ImageMatchingTask extends BaseTask{
      * @param context A variable of type Context
      * @param clientId A variable of type String
      * @param image A variable of type array of bytes
+     * @param outputFormat A variable of type String
      * @param matchCallback A variable of type IMatchCallback
      * @param endpoints A variable of type INyrisEndpoints
      * @see Context
      * @see IMatchCallback
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, String clientId, byte[] image,
+    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat,
                       IMatchCallback matchCallback, INyrisEndpoints endpoints){
-        super(context, clientId, matchCallback,endpoints);
-        this.image = image;
-        this.matchCallback = matchCallback;
+        this(context, clientId, image, outputFormat, -1, -1, -1, matchCallback, endpoints);
     }
 
     /**
@@ -93,6 +96,7 @@ class ImageMatchingTask extends BaseTask{
      * @param context A variable of type Context
      * @param clientId A variable of type String
      * @param image A variable of type array of bytes
+     * @param outputFormat A variable of type String
      * @param isOnlySimilarOffers A variable of type boolean
      * @param matchCallback A variable of type IMatchCallback
      * @param endpoints A variable of type INyrisEndpoints
@@ -100,16 +104,16 @@ class ImageMatchingTask extends BaseTask{
      * @see IMatchCallback
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, String clientId, byte[] image, boolean isOnlySimilarOffers,
-                      IMatchCallback matchCallback, INyrisEndpoints endpoints){
-        this(context, clientId, image, matchCallback, endpoints);
+    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat,
+                      boolean isOnlySimilarOffers, IMatchCallback matchCallback, INyrisEndpoints endpoints){
+        this(context, clientId, image, outputFormat, matchCallback, endpoints);
         this.isOnlySimilarOffers = isOnlySimilarOffers;
     }
 
     @Override
     protected Object doInBackground(Void... params) {
         //Build Request
-        String strEndpoints = null;
+        String strEndpoints;
         if(lat == -1)
             strEndpoints = endpoints.getImageMatchingApi();
         else
@@ -120,7 +124,7 @@ class ImageMatchingTask extends BaseTask{
                 .addHeader("X-Api-Key", clientId)
                 .addHeader("Content-Length", image.length+"")
                 //Add this if you want to get offers based on our Model
-                .addHeader("Accept", "application/offers.everybag+json");
+                .addHeader("Accept", outputFormat);
         if(isOnlySimilarOffers)
             builder.addHeader("X-Only-Semantic-Search","nyris");
         builder.post(RequestBody.create(MediaType.parse("image/jpg"), image));
