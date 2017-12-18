@@ -27,6 +27,9 @@ public class DebugDemoApp extends Application {
         super.onCreate();
         NyrisEndpoints.DEBUG = BuildConfig.DEBUG;
         Stetho.initializeWithDefaults(this);
-        Nyris.getInstance().init(this, BuildConfig.CLIENT_ID);
+        Nyris.getInstance()
+                .init(this, BuildConfig.CLIENT_ID)
+                //You can add your own output format
+                /*.setOutputformat("YOUR_OUTPUT_FORMAT")*/;
     }
 }

@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.4.0 - 2017-11-30
 ### Added
+- new feature that help to specify the output format of the matching results
+
+### Updated
+- the sdk to support set of output format
+- ImageMatching Task
+
+## 1.4.0 - 2017-11-30
+### Added
 - object proposal feature
 
 ### Update

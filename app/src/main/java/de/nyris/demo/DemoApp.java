@@ -26,6 +26,9 @@ public class DemoApp extends Application {
         super.onCreate();
 
         //Init the SDK
-        Nyris.getInstance().init(this, BuildConfig.CLIENT_ID);
+        Nyris.getInstance()
+                .init(this, BuildConfig.CLIENT_ID)
+                //You can add your own output format
+                /*.setOutputformat("YOUR_OUTPUT_FORMAT")*/;
     }
 }
