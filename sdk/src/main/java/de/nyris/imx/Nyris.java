@@ -36,9 +36,10 @@ public class Nyris implements INyris {
     private Context mContext;
     private INyrisEndpoints endpoints;
     private String mClientId;
+    private String mOutputFormat;
 
     @Override
-    public void init(Context context, String clientId){
+    public INyris init(Context context, String clientId){
         if(context == null)
             throw new RuntimeException("Context is null");
         if(clientId == null)
@@ -47,6 +48,7 @@ public class Nyris implements INyris {
         mClientId = clientId;
         tasks = new ArrayList<>();
         endpoints = NyrisEndpoints.getInstance();
+        return this;
     }
     /**
      * Get Instance of SDK and init params to defaults values
@@ -78,15 +80,22 @@ public class Nyris implements INyris {
     }
 
     @Override
-    public void setClientId(final @NonNull String clientId){
+    public INyris setClientId(final @NonNull String clientId){
         mClientId = clientId;
+        return this;
+    }
+
+    @Override
+    public INyris setOutputformat(String outputFormat) {
+        mOutputFormat = outputFormat;
+        return this;
     }
 
     @Override
     public void match(final @NonNull byte[] image, final @NonNull IMatchCallback matchCallback) {
         if(mClientId == null)
             throw new RuntimeException("clientId is null, you need to set your client id!");
-        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, matchCallback, endpoints);
+        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, mOutputFormat, matchCallback, endpoints);
         task.execute();
         tasks.add(task);
     }
@@ -95,7 +104,7 @@ public class Nyris implements INyris {
     public void match(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback) {
         if(mClientId == null)
             throw new RuntimeException("clientId is null, you need to set your client id!");
-        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, isOnlySimilarOffers, matchCallback, endpoints);
+        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, mOutputFormat, isOnlySimilarOffers, matchCallback, endpoints);
         task.execute();
         tasks.add(task);
     }

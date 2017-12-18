@@ -29,7 +29,7 @@ public interface INyris {
      * @param context A variable of type Context
      * @param clientId A variable of type String
      */
-    void init(Context context, String clientId);
+    INyris init(Context context, String clientId);
 
     /**
      * Get Nyris endpoints
@@ -48,7 +48,13 @@ public interface INyris {
      * Set clientId with clientId and secret
      * @param clientId A variable of type String
      */
-    void setClientId(String clientId);
+    INyris setClientId(String clientId);
+
+    /**
+     * Set output format for image matching response
+     * @param outputFormat A variable of type String
+     */
+    INyris setOutputformat(String outputFormat);
 
     /**
      * Match an image
