@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 package de.nyris.imx;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * OfferInfo.java - A class model that contain offer information
@@ -23,7 +28,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by nyris GmbH
  * Copyright © 2017 nyris GmbH. All rights reserved.
  */
-public class OfferInfo{
+public class OfferInfo implements Serializable, Parcelable{
     @SerializedName("id")
     private String id;
     @SerializedName("p")
@@ -44,6 +49,28 @@ public class OfferInfo{
      */
     public OfferInfo(){
     }
+
+    protected OfferInfo(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        description = in.readString();
+        merchant = in.readString();
+        price = in.readParcelable(Price.class.getClassLoader());
+        link = in.readString();
+        imageInfo = in.readParcelable(ImageInfo.class.getClassLoader());
+    }
+
+    public static final Creator<OfferInfo> CREATOR = new Creator<OfferInfo>() {
+        @Override
+        public OfferInfo createFromParcel(Parcel in) {
+            return new OfferInfo(in);
+        }
+
+        @Override
+        public OfferInfo[] newArray(int size) {
+            return new OfferInfo[size];
+        }
+    };
 
     /**
      * Get Offer id
@@ -101,5 +128,21 @@ public class OfferInfo{
      */
     public String getLink() {
         return link;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeString(merchant);
+        dest.writeParcelable(price, flags);
+        dest.writeString(link);
+        dest.writeParcelable(imageInfo, flags);
     }
 }

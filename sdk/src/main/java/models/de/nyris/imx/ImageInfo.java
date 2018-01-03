@@ -15,7 +15,12 @@
  */
 package de.nyris.imx;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * ImageInfo.java - A class model that contain image information
@@ -24,7 +29,10 @@ import com.google.gson.annotations.SerializedName;
  * Created by nyris GmbH
  * Copyright © 2017 nyris GmbH. All rights reserved.
  */
-public class ImageInfo{
+public class ImageInfo implements Serializable, Parcelable {
+    @SerializedName("id")
+    protected String id;
+
     @SerializedName("url")
     String url;
 
@@ -34,11 +42,47 @@ public class ImageInfo{
     public ImageInfo(){
     }
 
+    protected ImageInfo(Parcel in) {
+        id = in.readString();
+        url = in.readString();
+    }
+
+    public static final Creator<ImageInfo> CREATOR = new Creator<ImageInfo>() {
+        @Override
+        public ImageInfo createFromParcel(Parcel in) {
+            return new ImageInfo(in);
+        }
+
+        @Override
+        public ImageInfo[] newArray(int size) {
+            return new ImageInfo[size];
+        }
+    };
+
+    /**
+     * Get Id
+     * @return String value
+     */
+    public String getId() {
+        return id;
+    }
+
     /**
      * Get Url of the image
      * @return URL String value
      */
     public String getUrl() {
         return url;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(url);
     }
 }
