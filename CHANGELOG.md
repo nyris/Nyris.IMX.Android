@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.5.2 - 2018-01-03
+### Added
+- Implementation of Parcelable to ImageInfo model
+- Implementation of Parcelable to OfferInfo model
+- Implementation of Parcelable to Price model  
+
 ## 1.5.0 - 2017-12-18
 ### Added
 - new feature that help to specify the output format of the matching results
