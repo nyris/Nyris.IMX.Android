@@ -104,7 +104,7 @@ class BaseTask extends AsyncTask<Void, Void, Object> {
                 }
                 catch (Exception ignored){}
 
-                if(responseError == null){
+                if(responseError == null || responseError.getErrorCode() == null){
                     responseError = new ResponseError();
                     responseError.setErrorCode(convertErrorResponseCode(response));
                     String message = response.message();
