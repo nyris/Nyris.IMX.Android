@@ -8,7 +8,11 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Created by sidali on 1/5/18.
+ * Offer.java - A class model that contain full offer information
+ *
+ * @author  Sidali Mellouk
+ * Created by nyris GmbH
+ * Copyright © 2017 nyris GmbH. All rights reserved.
  */
 
 public class Offer extends OfferInfo implements Serializable, Parcelable{
@@ -99,74 +103,148 @@ public class Offer extends OfferInfo implements Serializable, Parcelable{
         }
     };
 
+    /**
+     * Get Offer title
+     * @return String value
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Get Offer description
+     * @return String value
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Get Offer long description
+     * @return String value
+     */
     public String getDescriptionLong() {
         return descriptionLong;
     }
 
+    /**
+     * Get Offer language
+     * @return String value
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * Get Offer brand
+     * @return String value
+     */
     public String getBrand() {
         return brand;
     }
 
+    /**
+     * Get Offer catalog numbers
+     * @return Array of float
+     */
     public float[] getCatalogNumbers() {
         return catalogNumbers;
     }
 
+    /**
+     * Get Offer custom ids
+     * @return CustomIds object
+     * @see CustomIds
+     */
     public CustomIds getCustomIds() {
         return customIds;
     }
 
+    /**
+     * Get Offer keywords
+     * @return Array of String
+     */
     public String[] getKeywords() {
         return keywords;
     }
 
+    /**
+     * Get Offer categories
+     * @return Array of String
+     */
     public String[] getCategories() {
         return categories;
     }
 
+    /**
+     * Get Offer availability
+     * @return String value
+     */
     public String getAvailability() {
         return availability;
     }
 
+    /**
+     * Get Offer group ID
+     * @return String value
+     */
     public String getGroupId() {
         return groupId;
     }
 
+    /**
+     * Get Offer price
+     * @return String value
+     */
     public String getPriceStr() {
         return price;
     }
 
+    /**
+     * Get Offer sale price
+     * @return String value
+     */
     public String getSalePrice() {
         return salePrice;
     }
 
+    /**
+     * Get Offer Links
+     * @return Links object
+     * @see Links
+     */
     public Links getLinks() {
         return links;
     }
 
+    /**
+     * Get Offer images
+     * @return Array of String
+     */
     public String[] getImages() {
         return images;
     }
 
+    /**
+     * Get Offer metadata
+     * @return String value
+     */
     public String getMetadata() {
         return metadata;
     }
 
+    /**
+     * Get Offer SKU
+     * @return String value
+     */
     public String getSku() {
         return sku;
     }
 
+    /**
+     * Get Offer SKU
+     * @return float value
+     */
     public float getScore() {
         return score;
     }
