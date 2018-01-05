@@ -158,8 +158,8 @@ class ImageMatchingTask extends BaseTask{
                     matchCallback.onMatched(strContent);
                 ResponseImage responseImage = new Gson().fromJson(strContent, ResponseImage.class);
                 if(responseImage != null){
-                    List<OfferInfo> offerInfos = responseImage.getOfferInfos();
-                    matchCallback.onMatched(offerInfos);
+                    matchCallback.onMatched(responseImage.getOfferInfos());
+                    matchCallback.onMatched(responseImage.getOffers());
                 }
                 else {
                     responseError.setErrorCode(ResponseCode.IMAGE_NOT_FOUND_ERROR);
