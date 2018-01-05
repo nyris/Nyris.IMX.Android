@@ -70,7 +70,7 @@ class ImageMatchingTask extends BaseTask{
         this.matchCallback = matchCallback;
 
         if(this.outputFormat == null){
-            this.outputFormat = "application/offers.everybag+json";
+            this.outputFormat = "application/offers.complete+json";
         }
     }
 
