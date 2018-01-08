@@ -78,7 +78,7 @@ class ImageMatchingTask extends BaseTask{
         }
 
         if(this.language == null){
-            this.language = "en";
+            this.language = "*";
         }
     }
 
@@ -131,8 +131,8 @@ class ImageMatchingTask extends BaseTask{
         Request.Builder builder = new Request.Builder()
                 .url(strEndpoints)
                 .addHeader("X-Api-Key", clientId)
-                .addHeader("Content-Length", language)
-                .addHeader("Accept-Language: *", image.length+"")
+                .addHeader("Content-Length", image.length+"")
+                .addHeader("Accept-Language", language)
                 .addHeader("Accept", outputFormat);
         if(isOnlySimilarOffers)
             builder.addHeader("X-Only-Semantic-Search","nyris");
