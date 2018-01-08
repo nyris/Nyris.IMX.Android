@@ -57,6 +57,12 @@ public interface INyris {
     INyris setOutputformat(String outputFormat);
 
     /**
+     * Set language of returned offers
+     * @param language A variable of type String
+     */
+    INyris setLanguage(String language);
+
+    /**
      * Match an image
      * @param image A variable of type of array of bytes
      * @param matchCallback A variable of type IMatchCallback

@@ -37,6 +37,7 @@ public class Nyris implements INyris {
     private INyrisEndpoints endpoints;
     private String mClientId;
     private String mOutputFormat;
+    private String mLanguage;
 
     @Override
     public INyris init(Context context, String clientId){
@@ -92,10 +93,17 @@ public class Nyris implements INyris {
     }
 
     @Override
+    public INyris setLanguage(String language) {
+        mLanguage = language;
+        return this;
+    }
+
+    @Override
     public void match(final @NonNull byte[] image, final @NonNull IMatchCallback matchCallback) {
         if(mClientId == null)
             throw new RuntimeException("clientId is null, you need to set your client id!");
-        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, mOutputFormat, matchCallback, endpoints);
+        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, mOutputFormat, mLanguage,
+                matchCallback, endpoints);
         task.execute();
         tasks.add(task);
     }
@@ -104,7 +112,8 @@ public class Nyris implements INyris {
     public void match(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback) {
         if(mClientId == null)
             throw new RuntimeException("clientId is null, you need to set your client id!");
-        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, mOutputFormat, isOnlySimilarOffers, matchCallback, endpoints);
+        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, mOutputFormat, mLanguage,
+                isOnlySimilarOffers, matchCallback, endpoints);
         task.execute();
         tasks.add(task);
     }
