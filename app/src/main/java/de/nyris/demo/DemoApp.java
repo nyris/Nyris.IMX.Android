@@ -28,6 +28,8 @@ public class DemoApp extends Application {
         //Init the SDK
         Nyris.getInstance()
                 .init(this, BuildConfig.CLIENT_ID)
+                //Set preferred offer language
+                /*.setLanguage("de")*/
                 //You can add your own output format
                 /*.setOutputformat("YOUR_OUTPUT_FORMAT")*/;
     }
