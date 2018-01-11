@@ -15,7 +15,13 @@ import java.io.Serializable;
  * Copyright © 2017 nyris GmbH. All rights reserved.
  */
 
-public class Offer extends OfferInfo implements Serializable, Parcelable{
+public class Offer implements Serializable, Parcelable{
+    @SerializedName("title")
+    String title;
+
+    @SerializedName("description")
+    String description;
+
     @SerializedName("descriptionLong")
     String descriptionLong;
 
@@ -91,15 +97,15 @@ public class Offer extends OfferInfo implements Serializable, Parcelable{
         score = in.readFloat();
     }
 
-    public static final Parcelable.Creator<OfferInfo> CREATOR = new Parcelable.Creator<OfferInfo>() {
+    public static final Parcelable.Creator<Offer> CREATOR = new Parcelable.Creator<Offer>() {
         @Override
-        public OfferInfo createFromParcel(Parcel in) {
-            return new OfferInfo(in);
+        public Offer createFromParcel(Parcel in) {
+            return new Offer(in);
         }
 
         @Override
-        public OfferInfo[] newArray(int size) {
-            return new OfferInfo[size];
+        public Offer[] newArray(int size) {
+            return new Offer[size];
         }
     };
 

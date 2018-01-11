@@ -43,4 +43,10 @@ interface INyrisEndpoints {
      * @return A String URL
      */
     String getObjectProposalApi();
+
+    /**
+     * Get Text Search API URL
+     * @return A String URL
+     */
+    String getTextSearchApi();
 }

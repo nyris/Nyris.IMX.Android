@@ -128,6 +128,16 @@ public class Nyris implements INyris {
     }
 
     @Override
+    public void textMatch(String text, IMatchCallback matchCallback) {
+        if(mClientId == null)
+            throw new RuntimeException("clientId is null, you need to set your client id!");
+        TextSearchTask task = new TextSearchTask(mContext, mClientId, text,mOutputFormat, mLanguage,
+                matchCallback, endpoints);
+        task.execute();
+        tasks.add(task);
+    }
+
+    @Override
     public void clearAllTasks() {
         if(tasks == null)
             return;

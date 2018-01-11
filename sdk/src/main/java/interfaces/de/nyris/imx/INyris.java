@@ -88,6 +88,13 @@ public interface INyris {
     void extractObjects(byte[] image, IObjectExtractCallback callback);
 
     /**
+     * Text Search
+     * @param text A variable of type String
+     * @param matchCallback A variable of type IMatchCallback
+     * @see IMatchCallback
+     */
+    void textMatch(String text, IMatchCallback matchCallback);
+    /**
      * Clear pending or running Tasks
      */
     void clearAllTasks();
