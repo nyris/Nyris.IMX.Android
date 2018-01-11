@@ -24,6 +24,7 @@ import android.view.View;
 
 import org.json.JSONObject;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.nyris.camera.Callback;
@@ -32,6 +33,7 @@ import de.nyris.imx.IMatchCallback;
 import de.nyris.imx.IObjectExtractCallback;
 import de.nyris.imx.Nyris;
 import de.nyris.imx.ObjectProposal;
+import de.nyris.imx.Offer;
 import de.nyris.imx.OfferInfo;
 import de.nyris.imx.ResponseError;
 
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements Callback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
-        camera = (CameraView) findViewById(R.id.camera);
+        camera = findViewById(R.id.camera);
         camera.addCallback(MainActivity.this);
     }
 
@@ -100,11 +102,16 @@ public class MainActivity extends AppCompatActivity implements Callback {
                 .match(data, new IMatchCallback() {
                     @Override
                     public void onMatched(final List<OfferInfo> offerInfos) {
+
+                    }
+
+                    @Override
+                    public void onMatched(final Collection<Offer> offers) {
                         Nyris.getInstance().extractObjects(data, new IObjectExtractCallback() {
                             @Override
                             public void onObjectExtracted(List<ObjectProposal> objectProposals) {
                                 //Render results
-                                HelperDialog.messageBoxDialog(MainActivity.this, "Success", "Count offers : "+offerInfos.size() +
+                                HelperDialog.messageBoxDialog(MainActivity.this, "Success", "Count offers : "+offers.size() +
                                         "\nCount Extracted Objects : " +objectProposals.size(),null);
                             }
 

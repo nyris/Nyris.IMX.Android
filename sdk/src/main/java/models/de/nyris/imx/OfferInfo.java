@@ -30,19 +30,25 @@ import java.io.Serializable;
  */
 public class OfferInfo implements Serializable, Parcelable{
     @SerializedName("id")
-    private String id;
+    String id;
+
     @SerializedName("p")
-    private Price price;
+    Price price;
+
     @SerializedName("mer")
-    private String merchant;
+    String merchant;
+
     @SerializedName("title")
-    private String title;
-    @SerializedName("desc")
-    private String description;
+    String title;
+
+    @SerializedName("description")
+    String description;
+
     @SerializedName("img")
-    private ImageInfo imageInfo;
+    ImageInfo imageInfo;
+
     @SerializedName("l")
-    private String link;
+    String link;
 
     /**
      * Default constructor

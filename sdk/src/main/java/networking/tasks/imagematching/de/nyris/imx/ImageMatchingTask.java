@@ -41,6 +41,7 @@ class ImageMatchingTask extends BaseTask{
     private double acc = -1;
     private byte[] image;
     private String outputFormat;
+    private String language;
     private boolean isOnlySimilarOffers;
     private IMatchCallback matchCallback;
 
@@ -50,6 +51,7 @@ class ImageMatchingTask extends BaseTask{
      * @param clientId A variable of type String
      * @param image A variable of type array of bytes
      * @param outputFormat A variable of type String
+     * @param language A variable of type String
      * @param lat A variable of type double
      * @param lon A variable of type double
      * @param acc A variable of type double
@@ -59,18 +61,24 @@ class ImageMatchingTask extends BaseTask{
      * @see IMatchCallback
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat,double lat, double lon, double acc,
+    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat, String language,
+                      double lat, double lon, double acc,
                       IMatchCallback matchCallback, INyrisEndpoints endpoints){
         super(context, clientId, matchCallback,endpoints);
         this.image = image;
         this.outputFormat = outputFormat;
+        this.language = language;
         this.lat = lat;
         this.lon = lon;
         this.acc = acc;
         this.matchCallback = matchCallback;
 
         if(this.outputFormat == null){
-            this.outputFormat = "application/offers.everybag+json";
+            this.outputFormat = "application/offers.complete+json";
+        }
+
+        if(this.language == null){
+            this.language = "*";
         }
     }
 
@@ -80,15 +88,16 @@ class ImageMatchingTask extends BaseTask{
      * @param clientId A variable of type String
      * @param image A variable of type array of bytes
      * @param outputFormat A variable of type String
+     * @param language A variable of type String
      * @param matchCallback A variable of type IMatchCallback
      * @param endpoints A variable of type INyrisEndpoints
      * @see Context
      * @see IMatchCallback
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat,
+    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat, String language,
                       IMatchCallback matchCallback, INyrisEndpoints endpoints){
-        this(context, clientId, image, outputFormat, -1, -1, -1, matchCallback, endpoints);
+        this(context, clientId, image, outputFormat,language, -1, -1, -1, matchCallback, endpoints);
     }
 
     /**
@@ -104,9 +113,9 @@ class ImageMatchingTask extends BaseTask{
      * @see IMatchCallback
      * @see INyrisEndpoints
      */
-    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat,
+    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat, String language,
                       boolean isOnlySimilarOffers, IMatchCallback matchCallback, INyrisEndpoints endpoints){
-        this(context, clientId, image, outputFormat, matchCallback, endpoints);
+        this(context, clientId, image, outputFormat, language, matchCallback, endpoints);
         this.isOnlySimilarOffers = isOnlySimilarOffers;
     }
 
@@ -123,7 +132,7 @@ class ImageMatchingTask extends BaseTask{
                 .url(strEndpoints)
                 .addHeader("X-Api-Key", clientId)
                 .addHeader("Content-Length", image.length+"")
-                //Add this if you want to get offers based on our Model
+                .addHeader("Accept-Language", language)
                 .addHeader("Accept", outputFormat);
         if(isOnlySimilarOffers)
             builder.addHeader("X-Only-Semantic-Search","nyris");
@@ -158,8 +167,8 @@ class ImageMatchingTask extends BaseTask{
                     matchCallback.onMatched(strContent);
                 ResponseImage responseImage = new Gson().fromJson(strContent, ResponseImage.class);
                 if(responseImage != null){
-                    List<OfferInfo> offerInfos = responseImage.getOfferInfos();
-                    matchCallback.onMatched(offerInfos);
+                    matchCallback.onMatched(responseImage.getOfferInfos());
+                    matchCallback.onMatched(responseImage.getOffers());
                 }
                 else {
                     responseError.setErrorCode(ResponseCode.IMAGE_NOT_FOUND_ERROR);

@@ -9,7 +9,7 @@ Supports >=4.1 Android devices
 For more information please see [nyris.io](https://nyris.io]/)
 
 ## Releases
-Current release is 1.6.1
+Current release is 1.7.0
 
 ## Download
 Download via Gradle:
@@ -46,7 +46,9 @@ public class YouApp_Or_Your_First_Activity{
         //Init the SDK
         Nyris.getInstance()
                 .init(this, BuildConfig.CLIENT_ID)
-                //You can set your own output format
+                //Set preferred offer language
+                /*.setLanguage("de")*/
+                //You can add your own output format
                 /*.setOutputformat("YOUR_OUTPUT_FORMAT")*/;
     }
 }
@@ -153,7 +155,13 @@ public class MainActivity extends Activity implements Callback {
         Nyris.getInstance()
                 .match(data, new IMatchCallback() {
                     @Override
+                    @Deprecated
                     public void onMatched(List<OfferInfo> offerInfos) {
+                        //onMatched List offers object
+                    }
+                    
+                    @Override
+                    public void onMatched(List<Offer> offerInfos) {
                         //onMatched List offers object
                     }
 

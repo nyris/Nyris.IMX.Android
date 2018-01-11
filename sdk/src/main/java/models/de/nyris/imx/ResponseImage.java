@@ -28,11 +28,11 @@ import java.util.List;
  */
 class ResponseImage{
     @SerializedName("p")
+    @Deprecated
     private String message;
 
-    @SerializedName("offerInfos")
-    private List<OfferInfo> offerInfos;
-
+    @SerializedName("results")
+    private List<Offer> offers;
     /**
      * Default Constructor
      */
@@ -42,7 +42,9 @@ class ResponseImage{
     /**
      * Get message
      * @return String value
+     * @deprecated will be removed in version 1.8.0
      */
+    @Deprecated
     public String getMessage() {
         return message;
     }
@@ -51,8 +53,19 @@ class ResponseImage{
      * Get Offers
      * @return List Offers value
      * @see OfferInfo
+     * @deprecated use {@link #getOffers()} instead, will be removed in version 1.8.0.
      */
+    @Deprecated
     public List<OfferInfo> getOfferInfos() {
-        return offerInfos;
+        return (List<OfferInfo>)(List<?>) offers;
+    }
+
+    /**
+     * Get Offers
+     * @return List Offers value
+     * @see Offer
+     */
+    public List<Offer> getOffers() {
+        return offers;
     }
 }
