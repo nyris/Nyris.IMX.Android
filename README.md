@@ -9,7 +9,7 @@ Supports >=4.1 Android devices
 For more information please see [nyris.io](https://nyris.io]/)
 
 ## Releases
-Current release is 1.7.0
+Current release is 1.8.0
 
 ## Download
 Download via Gradle:
@@ -153,15 +153,9 @@ public class MainActivity extends Activity implements Callback {
     public void onTakenPicture(byte[] image) {
         byte[] image = getIntent().getExtras().getByteArray("image");
         Nyris.getInstance()
-                .match(data, new IMatchCallback() {
+                .match(data, new IMatchCallback() {                    
                     @Override
-                    @Deprecated
-                    public void onMatched(List<OfferInfo> offerInfos) {
-                        //onMatched List offers object
-                    }
-                    
-                    @Override
-                    public void onMatched(List<Offer> offerInfos) {
+                    public void onMatched(List<Offer> offers) {
                         //onMatched List offers object
                     }
 

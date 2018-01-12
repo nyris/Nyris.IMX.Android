@@ -27,37 +27,12 @@ import java.util.List;
  * Copyright © 2017 nyris GmbH. All rights reserved.
  */
 class ResponseImage{
-    @SerializedName("p")
-    @Deprecated
-    private String message;
-
     @SerializedName("results")
     private List<Offer> offers;
     /**
      * Default Constructor
      */
     public ResponseImage(){
-    }
-
-    /**
-     * Get message
-     * @return String value
-     * @deprecated will be removed in version 1.8.0
-     */
-    @Deprecated
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * Get Offers
-     * @return List Offers value
-     * @see OfferInfo
-     * @deprecated use {@link #getOffers()} instead, will be removed in version 1.8.0.
-     */
-    @Deprecated
-    public List<OfferInfo> getOfferInfos() {
-        return (List<OfferInfo>)(List<?>) offers;
     }
 
     /**

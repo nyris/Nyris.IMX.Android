@@ -76,4 +76,15 @@ public abstract class NyrisEndpoints implements INyrisEndpoints{
                 .appendPath("regions");
         return builder.build().toString();
     }
+
+    @Override
+    public String getTextSearchApi() {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(scheme)
+                .authority(apiServer)
+                .appendPath("find")
+                .appendPath(version)
+                .appendPath("text");
+        return builder.build().toString();
+    }
 }
