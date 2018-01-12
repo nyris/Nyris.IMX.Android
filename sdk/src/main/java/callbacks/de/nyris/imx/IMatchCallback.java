@@ -15,9 +15,6 @@
  */
 package de.nyris.imx;
 
-import org.json.JSONObject;
-
-import java.util.Collection;
 import java.util.List;
 
 
@@ -32,19 +29,10 @@ import java.util.List;
 public interface IMatchCallback extends ICallback{
     /**
      * On Matched called when there are matched offers of the sent picture
-     * @param offerInfos A list of variable of type OfferInfos
-     * @see OfferInfo
-     * @deprecated use {@link #onMatched(Collection<Offer>)} instead, will be removed in version 1.8.0.
-     */
-    @Deprecated
-    void onMatched(List<OfferInfo> offerInfos);
-
-    /**
-     * On Matched called when there are matched offers of the sent picture
      * @param offers A list of variable of type OfferInfos
      * @see Offer
      */
-    void onMatched(Collection<Offer> offers);
+    void onMatched(List<Offer> offers);
 
     /**
      * On Matched called when there are matched offers of the sent picture

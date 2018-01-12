@@ -19,8 +19,6 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
-import java.util.List;
-
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -167,7 +165,6 @@ class ImageMatchingTask extends BaseTask{
                     matchCallback.onMatched(strContent);
                 ResponseImage responseImage = new Gson().fromJson(strContent, ResponseImage.class);
                 if(responseImage != null){
-                    matchCallback.onMatched(responseImage.getOfferInfos());
                     matchCallback.onMatched(responseImage.getOffers());
                 }
                 else {

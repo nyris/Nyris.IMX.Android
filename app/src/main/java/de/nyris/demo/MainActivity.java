@@ -17,14 +17,10 @@ package de.nyris.demo;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import org.json.JSONObject;
-
-import java.util.Collection;
 import java.util.List;
 
 import de.nyris.camera.Callback;
@@ -34,7 +30,6 @@ import de.nyris.imx.IObjectExtractCallback;
 import de.nyris.imx.Nyris;
 import de.nyris.imx.ObjectProposal;
 import de.nyris.imx.Offer;
-import de.nyris.imx.OfferInfo;
 import de.nyris.imx.ResponseError;
 
 public class MainActivity extends AppCompatActivity implements Callback {
@@ -100,13 +95,9 @@ public class MainActivity extends AppCompatActivity implements Callback {
         //Match taken picture
         Nyris.getInstance()
                 .match(data, new IMatchCallback() {
-                    @Override
-                    public void onMatched(final List<OfferInfo> offerInfos) {
-
-                    }
 
                     @Override
-                    public void onMatched(final Collection<Offer> offers) {
+                    public void onMatched(final List<Offer> offers) {
                         Nyris.getInstance().extractObjects(data, new IObjectExtractCallback() {
                             @Override
                             public void onObjectExtracted(List<ObjectProposal> objectProposals) {
