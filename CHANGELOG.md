@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.7.0 - 2018-01-12
+### Added
+- Text search feature
+- TextSearchTask class
+- Method textMatch in INyris interface
+### Update 
+- Demo app
+
+### Remove
+- Deprecated OfferInfo model
+- Deprecated methods
+
 ## 1.7.0 - 2018-01-11
 ### Added
 - Accept-Language header
