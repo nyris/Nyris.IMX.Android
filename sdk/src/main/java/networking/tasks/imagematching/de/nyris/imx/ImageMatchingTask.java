@@ -41,6 +41,7 @@ class ImageMatchingTask extends BaseTask{
     private String outputFormat;
     private String language;
     private boolean isOnlySimilarOffers;
+    private boolean isFirstStageOnly;
     private IMatchCallback matchCallback;
 
     /**
@@ -112,9 +113,29 @@ class ImageMatchingTask extends BaseTask{
      * @see INyrisEndpoints
      */
     ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat, String language,
-                      boolean isOnlySimilarOffers, IMatchCallback matchCallback, INyrisEndpoints endpoints){
+                      boolean isOnlySimilarOffers,IMatchCallback matchCallback, INyrisEndpoints endpoints){
         this(context, clientId, image, outputFormat, language, matchCallback, endpoints);
         this.isOnlySimilarOffers = isOnlySimilarOffers;
+    }
+
+    /**
+     * Constructor
+     * @param context A variable of type Context
+     * @param clientId A variable of type String
+     * @param image A variable of type array of bytes
+     * @param outputFormat A variable of type String
+     * @param isOnlySimilarOffers A variable of type boolean
+     * @param isFirstStageOnly A variable of type boolean
+     * @param matchCallback A variable of type IMatchCallback
+     * @param endpoints A variable of type INyrisEndpoints
+     * @see Context
+     * @see IMatchCallback
+     * @see INyrisEndpoints
+     */
+    ImageMatchingTask(Context context, String clientId, byte[] image, String outputFormat, String language,
+                      boolean isOnlySimilarOffers, boolean isFirstStageOnly,IMatchCallback matchCallback, INyrisEndpoints endpoints){
+        this(context, clientId, image, outputFormat, language,isOnlySimilarOffers, matchCallback, endpoints);
+        this.isFirstStageOnly = isFirstStageOnly;
     }
 
     @Override
@@ -132,8 +153,13 @@ class ImageMatchingTask extends BaseTask{
                 .addHeader("Content-Length", image.length+"")
                 .addHeader("Accept-Language", language)
                 .addHeader("Accept", outputFormat);
+
         if(isOnlySimilarOffers)
             builder.addHeader("X-Only-Semantic-Search","nyris");
+
+        if(isFirstStageOnly)
+            builder.addHeader("X-Only-First-Stage","nyris");
+
         builder.post(RequestBody.create(MediaType.parse("image/jpg"), image));
 
         Response response = HttpRequestHelper.post(builder);

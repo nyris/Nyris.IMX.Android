@@ -4,12 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## 1.7.0 - 2018-01-12
+
+## 1.9.0 - 2018-01-15
+### Added
+- Search only in first stage feature
+- Comments 
+
+## 1.8.0 - 2018-01-12
 ### Added
 - Text search feature
 - TextSearchTask class
 - Method textMatch in INyris interface
-### Update 
+
+### Updated 
 - Demo app
 
 ### Remove
@@ -53,7 +60,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - object proposal feature
 
-### Update
+### Updated
 - gradle to 3.0.0
 - update used libs in SDK
 - introduced compile only in the SDK build.gradle
@@ -69,8 +76,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Modified 
 - init SDK with Client Id
 - version of gson and okhttp library  
-
-
 
 ## 1.3.0 - 2017-11-23
 ### Added
