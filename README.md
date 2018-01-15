@@ -33,6 +33,7 @@ dependencies {
 * [Integrate nyris Camera](#integrate-nyris-camera)
 * [Match Taken Pictures](#match-taken-pictures)
 * [Extract Objects from Pictures](#extract-objects-from-pictures)
+* [Text Match](#text-match)
 * [Clear running or pending tasks](#clear-running-or-pending-tasks)
 
 ### Init SDK First:
@@ -172,6 +173,10 @@ public class MainActivity extends Activity implements Callback {
         // Or searching only similar offers
         Nyris.getInstance()
                         .match(data, true, new IMatchCallback(){...});
+        
+        // Or searching only first stage
+        Nyris.getInstance()
+                        .match(data, false, true, new IMatchCallback(){...});
     }
     ...
 }
@@ -218,6 +223,32 @@ public class MainActivity extends Activity implements Callback {
 }
 ```
 
+### Text Match
+Demo sample to use text match to find offers by SKU or title, desc ... 
+```java
+public class MainActivity extends Activity implements Callback {
+    //On taken picture from nyris Camera
+    public void onTextMatch(View view) {
+        Nyris.getInstance()
+                .textMatch(yourText, new IMatchCallback() {
+                    public void onMatched(List<Offer> offers) {
+                        //onMatched List offers object
+                    }
+    
+                    @Override
+                    public void onMatched(String json) {
+                        //onMatched String Json
+                    }
+    
+                    @Override
+                    public void onError(ResponseError error) {
+                        //On Error
+                    }
+                });
+    }
+    ...
+}
+```
 
 ### Clear running or pending tasks
 To clear pending or running background tasks
@@ -237,16 +268,16 @@ public class MainActivity extends Activity{
 License
 =======
 
-    Copyright 2017 nyris GmbH
+Copyright 2017 nyris GmbH
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+   http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
