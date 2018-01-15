@@ -80,6 +80,16 @@ public interface INyris {
     void match(byte[] image, boolean isOnlySimilarOffers, IMatchCallback matchCallback);
 
     /**
+     * Match an image
+     * @param image A variable of type of array of bytes
+     * @param isOnlySimilarOffers A variable of type Boolean
+     * @param isOnlyFirstStage A variable of type Boolean
+     * @param matchCallback A variable of type IMatchCallback
+     * @see IMatchCallback
+     */
+    void match(byte[] image, boolean isOnlySimilarOffers,boolean isOnlyFirstStage, IMatchCallback matchCallback);
+
+    /**
      * Extract object from picture
      * @param image A variable of type of array of bytes
      * @param callback A variable of type IObjectExtractCallback

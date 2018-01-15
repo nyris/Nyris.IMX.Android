@@ -119,6 +119,16 @@ public class Nyris implements INyris {
     }
 
     @Override
+    public void match(byte[] image, boolean isOnlySimilarOffers,boolean isOnlyFirstStage, IMatchCallback matchCallback) {
+        if(mClientId == null)
+            throw new RuntimeException("clientId is null, you need to set your client id!");
+        ImageMatchingTask task = new ImageMatchingTask(mContext, mClientId, image, mOutputFormat, mLanguage,
+                isOnlySimilarOffers,isOnlyFirstStage, matchCallback, endpoints);
+        task.execute();
+        tasks.add(task);
+    }
+
+    @Override
     public void extractObjects(byte[] image, IObjectExtractCallback callback) {
         if(mClientId == null)
             throw new RuntimeException("clientId is null, you need to set your client id!");
