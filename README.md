@@ -1,5 +1,7 @@
 Nyris Image Matching SDK for Android
 =======
+##### [DEPRECATED] please use the new [SDK](https://github.com/nyris/SDK.Android#nyris-sdk-for-android-)
+
 ![](nyris_logo.png)
 
 Nyris Image Matching SDK for Android allows to the usage of Image Matching service that provide a list
